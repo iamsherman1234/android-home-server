@@ -69,9 +69,9 @@ The server is accessible both on your local network and from anywhere in the wor
 | RAM | 4GB | 8GB (7.4GB usable) |
 | Storage | 32GB internal | 32GB |
 | CPU Architecture | ARM64 | Exynos 9820 · 8 Cores |
-| Android Version | 8.0+ | Android 12 |
+| Android Version | 8.0+ | Android 16 |
 | Root Access | Required | [KSUN](https://github.com/KernelSU-Next/KernelSU-Next) |
-| ROM | Any with root | [Infinity X](https://projectinfinity-x.com/downloads/beyond2lte)) |
+| ROM | Any with root | [Infinity X](https://projectinfinity-x.com/downloads/beyond2lte) |
 | Kernel | 4.9+ | [FrEeRuNnErKeRnEl-v3.6+ (4.14.356)](https://github.com/LeDrew2017/FreeRunnerKernel/releases/tag/v3.6) |
 | Network | WiFi | 2.4GHz / 5GHz |
 
