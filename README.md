@@ -70,9 +70,9 @@ The server is accessible both on your local network and from anywhere in the wor
 | Storage | 32GB internal | 32GB |
 | CPU Architecture | ARM64 | Exynos 9820 · 8 Cores |
 | Android Version | 8.0+ | Android 12 |
-| Root Access | Required | Magisk |
-| ROM | Any with root | InfinityOS (custom ROM) |
-| Kernel | 4.9+ | FreeRunner Kernel v3.6+ (4.14.356) |
+| Root Access | Required | [KSUN](https://github.com/KernelSU-Next/KernelSU-Next) |
+| ROM | Any with root | [Infinity X](https://projectinfinity-x.com/downloads/beyond2lte)) |
+| Kernel | 4.9+ | [FrEeRuNnErKeRnEl-v3.6+ (4.14.356)](https://github.com/LeDrew2017/FreeRunnerKernel/releases/tag/v3.6) |
 | Network | WiFi | 2.4GHz / 5GHz |
 
 > ⚠️ **Root access is mandatory.** DroidSpaces requires root to create and manage Linux containers on Android.
@@ -87,16 +87,15 @@ The server is accessible both on your local network and from anywhere in the wor
 
 | Software | Purpose | Where to Get |
 |---|---|---|
-| **Magisk** | Root manager | [github.com/topjohnwu/Magisk](https://github.com/topjohnwu/Magisk) |
-| **DroidSpaces** | Linux container manager | DroidSpaces app / your ROM's app store |
+| **KernelSU-Next** | Root manager | [KernelSU-Next](https://github.com/KernelSU-Next/KernelSU-Next)) |
+| **DroidSpaces** | Linux container manager | [DroidSpaces](https://github.com/ravindu644/Droidspaces-OSS) |
 | **Termux** | Terminal emulator to access container | [F-Droid](https://f-droid.org/packages/com.termux/) |
-| **Custom ROM** | Stable rooted Android base | InfinityOS or any rooted ROM |
-
+| **Stock/Custom ROM** | Stable rooted Android base | [Rooting and Android Kernel Requirement](https://github.com/ravindu644/Droidspaces-OSS/blob/main/README.md#rooting-requirements)|
 ### Inside the Debian Container (installed during setup)
 
 | Software | Version | Purpose |
 |---|---|---|
-| Debian | 11 Bullseye (ARM64) | Container OS |
+| Debian | 11 Bullseye (ARM64) | [Container Image](https://images.linuxcontainers.org/images/debian/bullseye/arm64/default/20260228_05%3A24/rootfs.tar.xz)|
 | Nginx | Latest stable | Web server + reverse proxy |
 | OpenSSH Server | 8.4+ | SSH remote access |
 | AdGuard Home | Latest | DNS + ad blocking |
@@ -220,7 +219,7 @@ Serveo free accounts are limited to 3 simultaneous active tunnels.
 
 DroidSpaces briefly mounts the container filesystem as read-only during startup. Writing logs to `/var/log/` during this window causes errors.
 
-**Solution:** Use `/tmp/` for service logs in the startup script.
+**Solution:** Use `/tmp/` for service logs in the startup script or enable SElinux Permissive in DroidSpaces.
 
 ---
 
@@ -258,11 +257,11 @@ Local Network
 
 | Service | Local URL | Remote URL |
 |---|---|---|
-| 🌐 Website | `http://192.168.100.149` | `https://sudo.serveousercontent.com` |
-| 🏠 Homer | `http://192.168.100.149:8080` | `https://sudo.serveousercontent.com` |
-| 🛡️ AdGuard | `http://192.168.100.149:8082` | `https://sudo.serveousercontent.com/adguard/` |
-| 📁 File Browser | `http://192.168.100.149:8081` | `https://sudo.serveousercontent.com/files/` |
-| 🎬 Jellyfin | `http://192.168.100.149:8096` | `https://sudo.serveousercontent.com/media/` |
+| 🌐 Website | `http://192.168.100.149` | `https://yourownservername.serveousercontent.com` |
+| 🏠 Homer | `http://192.168.100.149:8080` | `https://yourownservername.serveousercontent.com` |
+| 🛡️ AdGuard | `http://192.168.100.149:8082` | `https://yourownservername.serveousercontent.com/adguard/` |
+| 📁 File Browser | `http://192.168.100.149:8081` | `https://yourownservername.serveousercontent.com/files/` |
+| 🎬 Jellyfin | `http://192.168.100.149:8096` | `https://yourownservername.serveousercontent.com/media/` |
 | 🔐 SSH | `192.168.100.149:2222` | — |
 
 ---
@@ -273,24 +272,26 @@ Local Network
 
 #### 1.1 — Root your phone
 
-Install a custom ROM with Magisk root. This project was tested on **InfinityOS** with **Magisk**.
+Install a custom ROM with [Requirement](#software-requirements). This project was tested on **InfinityOS** with **KSUN 3.1.0**.
 
 #### 1.2 — Install DroidSpaces
 
-Install DroidSpaces from your ROM's app store or sideload the APK. DroidSpaces is a Linux container manager for Android that creates an isolated Debian environment.
+Install DroidSpaces from [Latest Release](https://github.com/ravindu644/Droidspaces-OSS/releases/tag/v4.5.1). DroidSpaces is a Linux container manager for Android that creates an isolated linux environment.
 
 #### 1.3 — Install Termux
 
-Install Termux from **F-Droid** (not Google Play — the Play Store version is outdated).
+Install Termux from **[F-Droid](https://f-droid.org/packages/com.termux/)** (not Google Play — the Play Store version is outdated).
 
 #### 1.4 — Create Debian Container in DroidSpaces
-
+**[Installation](https://github.com/ravindu644/Droidspaces-OSS/blob/main/Documentation/Installation-Android.md)**
 1. Open DroidSpaces
 2. Tap **+** to create a new container
-3. Select **Debian 11 Bullseye (ARM64)**
-4. Set storage to maximum available
-5. Enable **Run at Boot** and **Systemd Support**
-6. Create the container and wait for download
+3. Select **[Your Tarball](https://images.linuxcontainers.org/images/debian/bullseye/arm64/default/20260228_05%3A24/rootfs.tar.xz)**
+4. **Name** : give it a name (my case, ,i set debian)
+5. Enable **Set DNS Server (1.1.1.1,8.8.8.8), Android Storage, Hardware Access, SELinux Permissive and Run at Boot**
+6. Create the container and wait for completion.
+7. Start the container
+8. Copy login script
 
 #### 1.5 — Fix MAC Randomization (Prevent IP Changes)
 
@@ -309,8 +310,8 @@ timedatectl set-timezone Asia/Phnom_Penh
 
 ### Phase 2 — Enter Debian Container
 
-From Termux, enter the container as root:
-
+From Termux, enter the container by paste the copied script from copy login in Droidspaces.
+in my case:
 ```bash
 su -c '/data/local/Droidspaces/bin/droidspaces --name="debian" enter'
 ```
@@ -573,7 +574,7 @@ nohup /opt/AdGuardHome/AdGuardHome > /tmp/adguard.log 2>&1 &
 
 #### 6.5 — Complete setup wizard
 
-Open `http://192.168.100.149:3000` in your browser and complete the wizard:
+Open `http://YOUR PHONE'S IP:3000` in your browser and complete the wizard:
 
 - **Admin web interface port:** `8082`
 - **DNS server port:** `53`
@@ -607,7 +608,7 @@ Click **Update Filters** after adding all lists.
 #### 6.8 — Point your router DNS to AdGuard
 
 In your router's DHCP settings:
-- **Primary DNS:** `192.168.100.149`
+- **Primary DNS:** `YOUR PHONE's IP`
 - **Secondary DNS:** `1.1.1.1`
 
 #### 6.9 — Verify DNS blocking
@@ -645,12 +646,12 @@ nohup filebrowser \
   -d /opt/filebrowser/filebrowser.db \
   > /tmp/filebrowser.log 2>&1 &
 ```
-
+After first start, it will show the initial password. Copy and keep it.
 #### 7.3 — First login
 
-Open `http://192.168.100.149:8081`
+Open `http://YOUR PHONE'S IP:8081`
 
-Default credentials: **admin / admin** — change immediately after first login.
+Default credentials: **admin / from the output when first start** — change immediately after first login.
 
 ---
 
@@ -706,7 +707,7 @@ nohup jellyfin > /tmp/jellyfin.log 2>&1 &
 
 #### 8.6 — Complete setup wizard
 
-Open `http://192.168.100.149:8096` and complete the wizard.
+Open `http://YOUR PHONE'S IP:8096` and complete the wizard.
 
 When adding media libraries, use these paths:
 
@@ -846,7 +847,7 @@ service cron start
 #### 10.4 — Test the endpoint
 
 ```bash
-curl http://192.168.100.149/stats
+curl http://YOUR PHONE'S IP/stats
 ```
 
 ---
@@ -881,14 +882,14 @@ Visit `https://console.serveo.net` and log in with Google or GitHub. Add your pu
 ```bash
 ssh -i ~/.ssh/serveo_key \
     -o "StrictHostKeyChecking=no" \
-    -R sudo:80:localhost:80 \
+    -R YOURSERVERNAME:80:localhost:80 \
     serveo.net
 ```
 
 If successful you will see:
 
 ```
-Forwarding HTTP traffic from https://sudo.serveousercontent.com
+Forwarding HTTP traffic from https://YOURSERVERNAME.serveousercontent.com
 ```
 
 Press Ctrl+C after confirming it works.
@@ -910,7 +911,7 @@ ExecStart=/usr/bin/autossh -M 0 -N \
   -o "ServerAliveInterval 30" \
   -o "ServerAliveCountMax 3" \
   -o "StrictHostKeyChecking=no" \
-  -R sudo:80:localhost:80 \
+  -R YOURSERVERNAME:80:localhost:80 \
   serveo.net
 Restart=always
 RestartSec=30
@@ -933,7 +934,7 @@ systemctl start serveo
 systemctl status serveo
 
 # Test from outside your network
-curl -I https://sudo.serveousercontent.com
+curl -I https://YOURSERVERNAME.serveousercontent.com
 ```
 
 Expected: `HTTP/2 200`
@@ -1014,7 +1015,7 @@ echo "  AdGuard Home    : http://$IP:8082"
 echo "  File Browser    : http://$IP:8081"
 echo "  Jellyfin        : http://$IP:8096"
 echo "  Website         : http://$IP:80"
-echo "  Serveo Tunnel   : https://sudo.serveousercontent.com"
+echo "  Serveo Tunnel   : https://YOURSERVERNAME.serveousercontent.com"
 echo "================================"
 EOF
 
@@ -1052,7 +1053,7 @@ Settings → WiFi → Your Network → Advanced → MAC Address → **Use Device
 
 In your router's DHCP/DNS settings:
 
-- **Primary DNS:** `192.168.100.149` (your phone's IP)
+- **Primary DNS:** `YOUR PHONE'S IP` (your phone's IP)
 - **Secondary DNS:** `1.1.1.1` (fallback)
 
 This routes all DNS queries from every device on your network through AdGuard for network-wide ad blocking.
@@ -1225,7 +1226,7 @@ This is caused by cookies being set with path `/` instead of `/adguard/`. The Ng
 ## Security Notes
 
 - SSH is on non-standard **port 2222** to reduce automated scan noise
-- Change the default **File Browser password** (admin/admin) immediately after first login
+- Change the default **File Browser password**  immediately after first login
 - AdGuard Home and File Browser require login credentials
 - Serveo provides **HTTPS automatically** via their SSL certificate
 - AdGuard blocks malicious domains at DNS level for all network devices
@@ -1245,7 +1246,7 @@ ps aux | grep -E "nginx|AdGuard|filebrowser|jellyfin|autossh|sshd" | grep -v gre
 Check Serveo tunnel is live:
 
 ```bash
-curl -I https://sudo.serveousercontent.com
+curl -I https://YOURSERVERNAME.serveousercontent.com
 ```
 
 Expected: `HTTP/2 200`
