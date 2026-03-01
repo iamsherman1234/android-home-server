@@ -13,12 +13,12 @@
 ## 📋 Table of Contents
 
 - [Overview](#overview)
+- [Screenshots](#-screenshots)
 - [Hardware Requirements](#hardware-requirements)
 - [Software Requirements](#software-requirements)
 - [Limitations](#limitations)
 - [Architecture](#architecture)
 - [Services](#services)
-- [Screenshots](#screenshots)
 - [Installation](#installation)
   - [Phase 1 — Prepare Android](#phase-1--prepare-android)
   - [Phase 2 — Enter Debian Container](#phase-2--enter-debian-container)
@@ -62,6 +62,101 @@ The server is accessible both on your local network and from anywhere in the wor
 
 ---
 
+## 📸 Screenshots
+
+- [🌐 Landing Page](#screenshot-landing)
+- [🛡️ AdGuard Home](#screenshot-adguard)
+- [🎬 Jellyfin Media Server](#screenshot-jellyfin)
+- [📁 File Browser](#screenshot-filebrowser)
+- [📱 DroidSpaces](#screenshot-droidspaces)
+
+---
+
+<h3 id="screenshot-landing">🌐 Landing Page</h3>
+
+<table>
+  <tr>
+    <td><img src="screenshots/1.png" width="280"/></td>
+    <td><img src="screenshots/2.png" width="280"/></td>
+    <td><img src="screenshots/3.png" width="280"/></td>
+  </tr>
+  <tr>
+    <td align="center">Hero Section</td>
+    <td align="center">Live Stats</td>
+    <td align="center">Services</td>
+  </tr>
+</table>
+
+---
+
+<h3 id="screenshot-adguard">🛡️ AdGuard Home</h3>
+
+<table>
+  <tr>
+    <td><img src="screenshots/4.png" width="860"/></td>
+  </tr>
+  <tr>
+    <td align="center">DNS Dashboard & Ad Blocking</td>
+  </tr>
+</table>
+
+---
+
+<h3 id="screenshot-jellyfin">🎬 Jellyfin Media Server</h3>
+
+<table>
+  <tr>
+    <td><img src="screenshots/5.png" width="420"/></td>
+    <td><img src="screenshots/6.png" width="420"/></td>
+  </tr>
+  <tr>
+    <td align="center">Media Library</td>
+    <td align="center">Now Playing</td>
+  </tr>
+</table>
+
+---
+
+<h3 id="screenshot-filebrowser">📁 File Browser</h3>
+
+<table>
+  <tr>
+    <td><img src="screenshots/7.png" width="280"/></td>
+    <td><img src="screenshots/8.png" width="280"/></td>
+    <td><img src="screenshots/9.png" width="280"/></td>
+  </tr>
+  <tr>
+    <td align="center">File Manager</td>
+    <td align="center">Directory View</td>
+    <td align="center">File Preview</td>
+  </tr>
+</table>
+
+---
+
+<h3 id="screenshot-droidspaces">📱 DroidSpaces (Android Container)</h3>
+
+<table>
+  <tr>
+    <td><img src="screenshots/Droidspaces (1).png" width="160"/></td>
+    <td><img src="screenshots/Droidspaces (2).png" width="160"/></td>
+    <td><img src="screenshots/Droidspaces (3).png" width="160"/></td>
+    <td><img src="screenshots/Droidspaces (4).png" width="160"/></td>
+    <td><img src="screenshots/Droidspaces (5).png" width="160"/></td>
+    <td><img src="screenshots/Droidspaces (6).png" width="160"/></td>
+  </tr>
+  <tr>
+    <td align="center">Container</td>
+    <td align="center">Settings</td>
+    <td align="center">Services</td>
+    <td align="center">Storage</td>
+    <td align="center">Network</td>
+    <td align="center">Terminal</td>
+  </tr>
+</table>
+
+---
+
 ## Hardware Requirements
 
 | Component | Minimum | Tested On |
@@ -88,15 +183,16 @@ The server is accessible both on your local network and from anywhere in the wor
 
 | Software | Purpose | Where to Get |
 |---|---|---|
-| **KernelSU-Next** | Root manager | [KernelSU-Next](https://github.com/KernelSU-Next/KernelSU-Next)) |
+| **KernelSU-Next** | Root manager | [KernelSU-Next](https://github.com/KernelSU-Next/KernelSU-Next) |
 | **DroidSpaces** | Linux container manager | [DroidSpaces](https://github.com/ravindu644/Droidspaces-OSS) |
 | **Termux** | Terminal emulator to access container | [F-Droid](https://f-droid.org/packages/com.termux/) |
-| **Stock/Custom ROM** | Stable rooted Android base | [Rooting and Android Kernel Requirement](https://github.com/ravindu644/Droidspaces-OSS/blob/main/README.md#rooting-requirements)|
+| **Stock/Custom ROM** | Stable rooted Android base | [Rooting and Android Kernel Requirement](https://github.com/ravindu644/Droidspaces-OSS/blob/main/README.md#rooting-requirements) |
+
 ### Inside the Debian Container (installed during setup)
 
 | Software | Version | Purpose |
 |---|---|---|
-| Debian | 11 Bullseye (ARM64) | [Container Image](https://images.linuxcontainers.org/images/debian/bullseye/arm64/default/20260228_05%3A24/rootfs.tar.xz)|
+| Debian | 11 Bullseye (ARM64) | [Container Image](https://images.linuxcontainers.org/images/debian/bullseye/arm64/default/20260228_05%3A24/rootfs.tar.xz) |
 | Nginx | Latest stable | Web server + reverse proxy |
 | OpenSSH Server | 8.4+ | SSH remote access |
 | AdGuard Home | Latest | DNS + ad blocking |
@@ -220,7 +316,7 @@ Serveo free accounts are limited to 3 simultaneous active tunnels.
 
 DroidSpaces briefly mounts the container filesystem as read-only during startup. Writing logs to `/var/log/` during this window causes errors.
 
-**Solution:** Use `/tmp/` for service logs in the startup script or enable SElinux Permissive in DroidSpaces.
+**Solution:** Use `/tmp/` for service logs in the startup script or enable SELinux Permissive in DroidSpaces.
 
 ---
 
@@ -256,95 +352,15 @@ Local Network
 
 ## Services
 
-| Service | Local URL | Remote URL |
-|---|---|---|
-| 🌐 Website | `http://192.168.100.149` | `https://yourownservername.serveousercontent.com` |
-| 🏠 Homer | `http://192.168.100.149:8080` | `https://yourownservername.serveousercontent.com` |
-| 🛡️ AdGuard | `http://192.168.100.149:8082` | `https://yourownservername.serveousercontent.com/adguard/` |
-| 📁 File Browser | `http://192.168.100.149:8081` | `https://yourownservername.serveousercontent.com/files/` |
-| 🎬 Jellyfin | `http://192.168.100.149:8096` | `https://yourownservername.serveousercontent.com/media/` |
-| 🔐 SSH | `192.168.100.149:2222` | — |
+| Service | Local URL | Remote URL | Preview |
+|---|---|---|---|
+| 🌐 Nginx | `http://192.168.100.149` | `https://yourserver.serveousercontent.com` | [📸](#screenshot-landing) |
+| 🏠 Homer | `http://192.168.100.149:8080` | `https://yourserver.serveousercontent.com` | [📸](#screenshot-landing) |
+| 🛡️ AdGuard | `http://192.168.100.149:8082` | `https://yourserver.serveousercontent.com/adguard/` | [📸](#screenshot-adguard) |
+| 📁 File Browser | `http://192.168.100.149:8081` | `https://yourserver.serveousercontent.com/files/` | [📸](#screenshot-filebrowser) |
+| 🎬 Jellyfin | `http://192.168.100.149:8096` | `https://yourserver.serveousercontent.com/media/` | [📸](#screenshot-jellyfin) |
+| 🔐 SSH | `192.168.100.149:2222` | — | — |
 
----
-## 📸 Screenshots
-
-### 🌐 Landing Page
-<table>
-  <tr>
-    <td><img src="screenshots/1.png" width="280"/></td>
-    <td><img src="screenshots/2.png" width="280"/></td>
-    <td><img src="screenshots/3.png" width="280"/></td>
-  </tr>
-  <tr>
-    <td align="center">Hero Section</td>
-    <td align="center">Live Stats</td>
-    <td align="center">Services</td>
-  </tr>
-</table>
-
----
-
-### 🛡️ AdGuard Home
-<table>
-  <tr>
-    <td><img src="screenshots/4.png" width="600"/></td>
-  </tr>
-  <tr>
-    <td align="center">DNS Dashboard & Ad Blocking</td>
-  </tr>
-</table>
-
----
-
-### 🎬 Jellyfin Media Server
-<table>
-  <tr>
-    <td><img src="screenshots/5.png" width="420"/></td>
-    <td><img src="screenshots/6.png" width="420"/></td>
-  </tr>
-  <tr>
-    <td align="center">Media Library</td>
-    <td align="center">Now Playing</td>
-  </tr>
-</table>
-
----
-
-### 📁 File Browser
-<table>
-  <tr>
-    <td><img src="screenshots/7.png" width="280"/></td>
-    <td><img src="screenshots/8.png" width="280"/></td>
-    <td><img src="screenshots/9.png" width="280"/></td>
-  </tr>
-  <tr>
-    <td align="center">File Manager</td>
-    <td align="center">Directory View</td>
-    <td align="center">File Preview</td>
-  </tr>
-</table>
-
----
-
-### 📱 DroidSpaces (Android Container)
-<table>
-  <tr>
-    <td><img src="screenshots/Droidspaces (1).png" width="180"/></td>
-    <td><img src="screenshots/Droidspaces (2).png" width="180"/></td>
-    <td><img src="screenshots/Droidspaces (3).png" width="180"/></td>
-    <td><img src="screenshots/Droidspaces (4).png" width="180"/></td>
-    <td><img src="screenshots/Droidspaces (5).png" width="180"/></td>
-    <td><img src="screenshots/Droidspaces (6).png" width="180"/></td>
-  </tr>
-  <tr>
-    <td align="center">Container</td>
-    <td align="center">Settings</td>
-    <td align="center">Services</td>
-    <td align="center">Storage</td>
-    <td align="center">Network</td>
-    <td align="center">Terminal</td>
-  </tr>
-</table>
 ---
 
 ## Installation
@@ -353,26 +369,28 @@ Local Network
 
 #### 1.1 — Root your phone
 
-Install a custom ROM with [Requirement](#software-requirements). This project was tested on **InfinityOS** with **KSUN 3.1.0**.
+Install a custom ROM with [these requirements](#software-requirements). This project was tested on **InfinityOS** with **KSUN 3.1.0**.
 
 #### 1.2 — Install DroidSpaces
 
-Install DroidSpaces from [Latest Release](https://github.com/ravindu644/Droidspaces-OSS/releases/tag/v4.5.1). DroidSpaces is a Linux container manager for Android that creates an isolated linux environment.
+Install DroidSpaces from [Latest Release](https://github.com/ravindu644/Droidspaces-OSS/releases/tag/v4.5.1). DroidSpaces is a Linux container manager for Android that creates an isolated Linux environment.
 
 #### 1.3 — Install Termux
 
 Install Termux from **[F-Droid](https://f-droid.org/packages/com.termux/)** (not Google Play — the Play Store version is outdated).
 
 #### 1.4 — Create Debian Container in DroidSpaces
-**[Installation](https://github.com/ravindu644/Droidspaces-OSS/blob/main/Documentation/Installation-Android.md)**
+
+See full [Installation Guide](https://github.com/ravindu644/Droidspaces-OSS/blob/main/Documentation/Installation-Android.md)
+
 1. Open DroidSpaces
 2. Tap **+** to create a new container
-3. Select **[Your Tarball](https://images.linuxcontainers.org/images/debian/bullseye/arm64/default/20260228_05%3A24/rootfs.tar.xz)**
-4. **Name** : give it a name (my case, ,i set debian)
-5. Enable **Set DNS Server (1.1.1.1,8.8.8.8), Android Storage, Hardware Access, SELinux Permissive and Run at Boot**
-6. Create the container and wait for completion.
+3. Select **[Debian 11 Bullseye ARM64 Tarball](https://images.linuxcontainers.org/images/debian/bullseye/arm64/default/20260228_05%3A24/rootfs.tar.xz)**
+4. **Name:** give it a name (e.g. `debian`)
+5. Enable: **Set DNS Server (1.1.1.1, 8.8.8.8)**, **Android Storage**, **Hardware Access**, **SELinux Permissive**, and **Run at Boot**
+6. Create the container and wait for completion
 7. Start the container
-8. Copy login script
+8. Copy the login script shown after creation
 
 #### 1.5 — Fix MAC Randomization (Prevent IP Changes)
 
@@ -391,13 +409,13 @@ timedatectl set-timezone Asia/Phnom_Penh
 
 ### Phase 2 — Enter Debian Container
 
-From Termux, enter the container by paste the copied script from copy login in Droidspaces.
-in my case:
+From Termux, enter the container by pasting the login script copied from DroidSpaces. Example:
+
 ```bash
 su -c '/data/local/Droidspaces/bin/droidspaces --name="debian" enter'
 ```
 
-Every command from this point is run **inside the Debian container**.
+> Every command from this point is run **inside the Debian container**.
 
 ---
 
@@ -655,7 +673,7 @@ nohup /opt/AdGuardHome/AdGuardHome > /tmp/adguard.log 2>&1 &
 
 #### 6.5 — Complete setup wizard
 
-Open `http://YOUR PHONE'S IP:3000` in your browser and complete the wizard:
+Open `http://YOUR_PHONE_IP:3000` in your browser and complete the wizard:
 
 - **Admin web interface port:** `8082`
 - **DNS server port:** `53`
@@ -689,7 +707,7 @@ Click **Update Filters** after adding all lists.
 #### 6.8 — Point your router DNS to AdGuard
 
 In your router's DHCP settings:
-- **Primary DNS:** `YOUR PHONE's IP`
+- **Primary DNS:** `YOUR_PHONE_IP`
 - **Secondary DNS:** `1.1.1.1`
 
 #### 6.9 — Verify DNS blocking
@@ -727,12 +745,14 @@ nohup filebrowser \
   -d /opt/filebrowser/filebrowser.db \
   > /tmp/filebrowser.log 2>&1 &
 ```
-After first start, it will show the initial password. Copy and keep it.
+
+After first start, the terminal will show the initial password. Copy and save it.
+
 #### 7.3 — First login
 
-Open `http://YOUR PHONE'S IP:8081`
+Open `http://YOUR_PHONE_IP:8081`
 
-Default credentials: **admin / from the output when first start** — change immediately after first login.
+Default credentials: **admin / (password shown on first start)** — change immediately after first login.
 
 ---
 
@@ -788,7 +808,7 @@ nohup jellyfin > /tmp/jellyfin.log 2>&1 &
 
 #### 8.6 — Complete setup wizard
 
-Open `http://YOUR PHONE'S IP:8096` and complete the wizard.
+Open `http://YOUR_PHONE_IP:8096` and complete the wizard.
 
 When adding media libraries, use these paths:
 
@@ -920,15 +940,13 @@ cat /var/www/html/stats
 
 ```bash
 (crontab -l 2>/dev/null; echo "* * * * * /var/www/html/stats-gen.sh > /var/www/html/stats 2>/dev/null") | crontab -
-
-# Start cron
 service cron start
 ```
 
 #### 10.4 — Test the endpoint
 
 ```bash
-curl http://YOUR PHONE'S IP/stats
+curl http://192.168.100.149/stats
 ```
 
 ---
@@ -1011,10 +1029,7 @@ systemctl start serveo
 #### 11.6 — Verify tunnel is active
 
 ```bash
-# Check service status
 systemctl status serveo
-
-# Test from outside your network
 curl -I https://YOURSERVERNAME.serveousercontent.com
 ```
 
@@ -1081,7 +1096,7 @@ pkill jellyfin 2>/dev/null; sleep 1
 nohup jellyfin > /tmp/jellyfin.log 2>&1 &
 echo "    Jellyfin starting (takes ~20 seconds)..."
 
-# 7. Stats
+# 7. Stats + Cron
 /var/www/html/stats-gen.sh > /var/www/html/stats 2>/dev/null
 service cron start 2>/dev/null
 
@@ -1134,7 +1149,7 @@ Settings → WiFi → Your Network → Advanced → MAC Address → **Use Device
 
 In your router's DHCP/DNS settings:
 
-- **Primary DNS:** `YOUR PHONE'S IP` (your phone's IP)
+- **Primary DNS:** `YOUR_PHONE_IP`
 - **Secondary DNS:** `1.1.1.1` (fallback)
 
 This routes all DNS queries from every device on your network through AdGuard for network-wide ad blocking.
@@ -1199,9 +1214,9 @@ apt clean && apt autoremove -y
 │           └── config.yml              # Homer service configuration
 ├── srv/
 │   └── shared/                         # File Browser root (symlinks to Android storage)
-│       ├── movies -> /storage/emulated/0/Movies
-│       ├── music  -> /storage/emulated/0/Music
-│       ├── photos -> /storage/emulated/0/Pictures
+│       ├── movies    -> /storage/emulated/0/Movies
+│       ├── music     -> /storage/emulated/0/Music
+│       ├── photos    -> /storage/emulated/0/Pictures
 │       ├── documents -> /storage/emulated/0/Documents
 │       └── downloads -> /storage/emulated/0/Download
 └── root/
@@ -1220,7 +1235,6 @@ apt clean && apt autoremove -y
 
 ```bash
 IP=$(hostname -I | awk '{print $1}')
-curl -s -o /dev/null -w "SSH:         Port 2222\n"
 curl -s -o /dev/null -w "Homer:       %{http_code}\n" http://$IP:8080
 curl -s -o /dev/null -w "AdGuard:     %{http_code}\n" http://$IP:8082
 curl -s -o /dev/null -w "FileBrowser: %{http_code}\n" http://$IP:8081
@@ -1279,15 +1293,12 @@ ln -sf /usr/share/jellyfin/web /usr/lib/jellyfin/bin/jellyfin-web
 ### SSH — "connection closed with error: end of file"
 
 ```bash
-# Create missing privilege separation directory
 mkdir -p /run/sshd
 chmod 755 /run/sshd
 /usr/sbin/sshd
 ```
 
 ### Serveo — 502 Bad Gateway on boot
-
-The tunnel tries to connect before the network is ready. The systemd service includes `ExecStartPre=/bin/sleep 15` as a delay. If still failing:
 
 ```bash
 systemctl restart serveo
@@ -1307,7 +1318,7 @@ This is caused by cookies being set with path `/` instead of `/adguard/`. The Ng
 ## Security Notes
 
 - SSH is on non-standard **port 2222** to reduce automated scan noise
-- Change the default **File Browser password**  immediately after first login
+- Change the default **File Browser password** immediately after first login
 - AdGuard Home and File Browser require login credentials
 - Serveo provides **HTTPS automatically** via their SSL certificate
 - AdGuard blocks malicious domains at DNS level for all network devices
