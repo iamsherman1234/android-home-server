@@ -265,6 +265,86 @@ Local Network
 | 🔐 SSH | `192.168.100.149:2222` | — |
 
 ---
+## 📸 Screenshots
+
+### 🌐 Landing Page
+<table>
+  <tr>
+    <td><img src="screenshots/1.png" width="280"/></td>
+    <td><img src="screenshots/2.png" width="280"/></td>
+    <td><img src="screenshots/3.png" width="280"/></td>
+  </tr>
+  <tr>
+    <td align="center">Hero Section</td>
+    <td align="center">Live Stats</td>
+    <td align="center">Services</td>
+  </tr>
+</table>
+
+---
+
+### 🛡️ AdGuard Home
+<table>
+  <tr>
+    <td><img src="screenshots/4.png" width="600"/></td>
+  </tr>
+  <tr>
+    <td align="center">DNS Dashboard & Ad Blocking</td>
+  </tr>
+</table>
+
+---
+
+### 🎬 Jellyfin Media Server
+<table>
+  <tr>
+    <td><img src="screenshots/5.png" width="420"/></td>
+    <td><img src="screenshots/6.png" width="420"/></td>
+  </tr>
+  <tr>
+    <td align="center">Media Library</td>
+    <td align="center">Now Playing</td>
+  </tr>
+</table>
+
+---
+
+### 📁 File Browser
+<table>
+  <tr>
+    <td><img src="screenshots/7.png" width="280"/></td>
+    <td><img src="screenshots/8.png" width="280"/></td>
+    <td><img src="screenshots/9.png" width="280"/></td>
+  </tr>
+  <tr>
+    <td align="center">File Manager</td>
+    <td align="center">Directory View</td>
+    <td align="center">File Preview</td>
+  </tr>
+</table>
+
+---
+
+### 📱 DroidSpaces (Android Container)
+<table>
+  <tr>
+    <td><img src="screenshots/Droidspaces (1).png" width="180"/></td>
+    <td><img src="screenshots/Droidspaces (2).png" width="180"/></td>
+    <td><img src="screenshots/Droidspaces (3).png" width="180"/></td>
+    <td><img src="screenshots/Droidspaces (4).png" width="180"/></td>
+    <td><img src="screenshots/Droidspaces (5).png" width="180"/></td>
+    <td><img src="screenshots/Droidspaces (6).png" width="180"/></td>
+  </tr>
+  <tr>
+    <td align="center">Container</td>
+    <td align="center">Settings</td>
+    <td align="center">Services</td>
+    <td align="center">Storage</td>
+    <td align="center">Network</td>
+    <td align="center">Terminal</td>
+  </tr>
+</table>
+---
 
 ## Installation
 
