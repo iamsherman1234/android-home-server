@@ -13,7 +13,7 @@
 ## 📋 Table of Contents
 
 - [Overview](#overview)
-- [Screenshots](#-screenshots)
+- [Screenshots](#screenshots)
 - [Hardware Requirements](#hardware-requirements)
 - [Software Requirements](#software-requirements)
 - [Limitations](#limitations)
@@ -38,6 +38,8 @@
 - [Troubleshooting](#troubleshooting)
 - [Security Notes](#security-notes)
 - [Health Check](#health-check)
+- [Tested On](#tested-on)
+- [License](#license)
 
 ---
 
@@ -49,7 +51,7 @@ All services are installed **natively** inside Debian. Docker and Podman were te
 
 The server is accessible both on your local network and from anywhere in the world via a **Serveo SSH reverse tunnel** — no router port forwarding or static IP needed.
 
-### What you get
+### What You Get
 
 | Service | Purpose | Local Port | Remote Path |
 |---|---|---|---|
@@ -62,15 +64,7 @@ The server is accessible both on your local network and from anywhere in the wor
 
 ---
 
-## 📸 Screenshots
-
-- [🌐 Landing Page](#screenshot-landing)
-- [🛡️ AdGuard Home](#screenshot-adguard)
-- [🎬 Jellyfin Media Server](#screenshot-jellyfin)
-- [📁 File Browser](#screenshot-filebrowser)
-- [📱 DroidSpaces](#screenshot-droidspaces)
-
----
+## Screenshots
 
 <h3 id="screenshot-landing">🌐 Landing Page</h3>
 
@@ -168,12 +162,12 @@ The server is accessible both on your local network and from anywhere in the wor
 | Android Version | 8.0+ | Android 16 |
 | Root Access | Required | [KSUN](https://github.com/KernelSU-Next/KernelSU-Next) |
 | ROM | Any with root | [Infinity X](https://projectinfinity-x.com/downloads/beyond2lte) |
-| Kernel | 4.9+ | [FrEeRuNnErKeRnEl-v3.6+ (4.14.356)](https://github.com/LeDrew2017/FreeRunnerKernel/releases/tag/v3.6) |
+| Kernel | 4.9+ | [FreeRunnerKernel v3.6+ (4.14.356)](https://github.com/LeDrew2017/FreeRunnerKernel/releases/tag/v3.6) |
 | Network | WiFi | 2.4GHz / 5GHz |
 
 > ⚠️ **Root access is mandatory.** DroidSpaces requires root to create and manage Linux containers on Android.
 
-> ⚠️ **Keep the phone plugged in.** Running a 24/7 server will drain the battery. Plug it into a charger and monitor temperatures.
+> ⚠️ **Keep the phone plugged in.** Running a 24/7 server will drain the battery. Connect it to a charger and monitor temperatures.
 
 ---
 
@@ -186,7 +180,7 @@ The server is accessible both on your local network and from anywhere in the wor
 | **KernelSU-Next** | Root manager | [KernelSU-Next](https://github.com/KernelSU-Next/KernelSU-Next) |
 | **DroidSpaces** | Linux container manager | [DroidSpaces](https://github.com/ravindu644/Droidspaces-OSS) |
 | **Termux** | Terminal emulator to access container | [F-Droid](https://f-droid.org/packages/com.termux/) |
-| **Stock/Custom ROM** | Stable rooted Android base | [Rooting and Android Kernel Requirement](https://github.com/ravindu644/Droidspaces-OSS/blob/main/README.md#rooting-requirements) |
+| **Stock/Custom ROM** | Stable rooted Android base | [Rooting and Kernel Requirements](https://github.com/ravindu644/Droidspaces-OSS/blob/main/README.md#rooting-requirements) |
 
 ### Inside the Debian Container (installed during setup)
 
@@ -226,7 +220,7 @@ Docker was installed and tested but **fails to start** on this environment:
 Error: Devices cgroup isn't mounted
 ```
 
-**Root cause:** Android kernel 4.14 (FreeRunner) does not allow cgroup v1 device subsystem to be mounted from inside a chroot. DroidSpaces containers do not have the privileges to mount cgroup subsystems.
+**Root cause:** Android kernel 4.14 (FreeRunner) does not allow the cgroup v1 device subsystem to be mounted from inside a chroot. DroidSpaces containers do not have the privileges to mount cgroup subsystems.
 
 **Solution:** Install all services natively on Debian instead.
 
@@ -249,7 +243,8 @@ systemd is available in DroidSpaces but has limitations:
 - Services **cannot reliably auto-start** via `systemctl enable` on container boot
 - `systemctl start` works manually after boot
 - The Serveo tunnel service (`serveo.service`) works via systemd after initial boot
-- **Solution:** Use a bash startup script in `.bashrc` to launch all services when entering the container
+
+**Solution:** Use a bash startup script in `.bashrc` to launch all services when entering the container.
 
 ### ⚠️ Port 53 — Blocked by systemd-resolved
 
@@ -296,7 +291,7 @@ File Browser v2.60.0+ has a known bug where `--baseURL /files/` does not work co
 
 ### ⚠️ IP Address Changes
 
-The phone's IP changes if:
+The phone's IP may change if:
 - DHCP reassigns it on router reboot
 - MAC randomization is enabled (Android default)
 
@@ -316,7 +311,7 @@ Serveo free accounts are limited to 3 simultaneous active tunnels.
 
 DroidSpaces briefly mounts the container filesystem as read-only during startup. Writing logs to `/var/log/` during this window causes errors.
 
-**Solution:** Use `/tmp/` for service logs in the startup script or enable SELinux Permissive in DroidSpaces.
+**Solution:** Use `/tmp/` for service logs in the startup script, or enable SELinux Permissive in DroidSpaces.
 
 ---
 
@@ -367,13 +362,13 @@ Local Network
 
 ### Phase 1 — Prepare Android
 
-#### 1.1 — Root your phone
+#### 1.1 — Root Your Phone
 
-Install a custom ROM with [these requirements](#software-requirements). This project was tested on **InfinityOS** with **KSUN 3.1.0**.
+Install a custom ROM meeting the [requirements](#software-requirements). This project was tested on **InfinityOS** with **KSUN 3.1.0**.
 
 #### 1.2 — Install DroidSpaces
 
-Install DroidSpaces from [Latest Release](https://github.com/ravindu644/Droidspaces-OSS/releases/tag/v4.5.1). DroidSpaces is a Linux container manager for Android that creates an isolated Linux environment.
+Install DroidSpaces from the [latest release](https://github.com/ravindu644/Droidspaces-OSS/releases/tag/v4.5.1). DroidSpaces is a Linux container manager for Android that creates an isolated Linux environment.
 
 #### 1.3 — Install Termux
 
@@ -381,20 +376,20 @@ Install Termux from **[F-Droid](https://f-droid.org/packages/com.termux/)** (not
 
 #### 1.4 — Create Debian Container in DroidSpaces
 
-See full [Installation Guide](https://github.com/ravindu644/Droidspaces-OSS/blob/main/Documentation/Installation-Android.md)
+See the official [installation guide](https://github.com/ravindu644/Droidspaces-OSS/blob/main/Documentation/Installation-Android.md) for full details.
 
 1. Open DroidSpaces
 2. Tap **+** to create a new container
-3. Select **[Debian 11 Bullseye ARM64 Tarball](https://images.linuxcontainers.org/images/debian/bullseye/arm64/default/20260228_05%3A24/rootfs.tar.xz)**
-4. **Name:** give it a name (e.g. `debian`)
+3. Select **[your tarball](https://images.linuxcontainers.org/images/debian/bullseye/arm64/default/20260228_05%3A24/rootfs.tar.xz)**
+4. Set a **Name** (e.g. `debian`)
 5. Enable: **Set DNS Server (1.1.1.1, 8.8.8.8)**, **Android Storage**, **Hardware Access**, **SELinux Permissive**, and **Run at Boot**
 6. Create the container and wait for completion
 7. Start the container
-8. Copy the login script shown after creation
+8. Copy the login script
 
 #### 1.5 — Fix MAC Randomization (Prevent IP Changes)
 
-On your phone: **Settings → WiFi → Your Network → Advanced → MAC Address → Use Device MAC**
+On your phone: **Settings → Wi-Fi → Your Network → Advanced → MAC Address → Use Device MAC**
 
 Then set a **DHCP reservation** in your router to always assign the same IP to your phone's MAC address.
 
@@ -409,25 +404,25 @@ timedatectl set-timezone Asia/Phnom_Penh
 
 ### Phase 2 — Enter Debian Container
 
-From Termux, enter the container by pasting the login script copied from DroidSpaces. Example:
+From Termux, enter the container by pasting the login script copied from DroidSpaces. For example:
 
 ```bash
 su -c '/data/local/Droidspaces/bin/droidspaces --name="debian" enter'
 ```
 
-> Every command from this point is run **inside the Debian container**.
+Every command from this point is run **inside the Debian container**.
 
 ---
 
 ### Phase 3 — System Preparation
 
-#### 3.1 — Update system
+#### 3.1 — Update the System
 
 ```bash
 apt update && apt upgrade -y
 ```
 
-#### 3.2 — Install base dependencies
+#### 3.2 — Install Base Dependencies
 
 ```bash
 apt install -y curl wget ca-certificates gnupg nano net-tools \
@@ -435,14 +430,14 @@ apt install -y curl wget ca-certificates gnupg nano net-tools \
                cron iptables
 ```
 
-#### 3.3 — Fix iptables (required — Android kernel does not support nf_tables)
+#### 3.3 — Fix iptables (Required — Android Kernel Does Not Support nf_tables)
 
 ```bash
 update-alternatives --set iptables /usr/sbin/iptables-legacy
 update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
 ```
 
-#### 3.4 — Create shared media directories linked to Android storage
+#### 3.4 — Create Shared Media Directories Linked to Android Storage
 
 ```bash
 mkdir -p /srv/shared/{movies,music,photos,documents,downloads}
@@ -474,13 +469,13 @@ Subsystem sftp /usr/lib/openssh/sftp-server
 EOF
 ```
 
-#### 4.2 — Set root password
+#### 4.2 — Set Root Password
 
 ```bash
 passwd root
 ```
 
-#### 4.3 — Generate host keys
+#### 4.3 — Generate Host Keys
 
 ```bash
 ssh-keygen -A
@@ -502,7 +497,7 @@ ss -tulnp | grep 2222
 
 Expected output: sshd listening on port 2222.
 
-#### 4.6 — Connect from any device
+#### 4.6 — Connect from Any Device
 
 ```bash
 # Windows / Mac / Linux
@@ -524,21 +519,21 @@ ssh root@192.168.100.149 -p 2222
 apt install -y nginx
 ```
 
-> ⚠️ Ignore the systemd startup failure during install — expected in a chroot environment.
+> ⚠️ Ignore the systemd startup failure during install — this is expected in a chroot environment.
 
-#### 5.2 — Start Nginx directly (not via systemd)
+#### 5.2 — Start Nginx Directly (Not via systemd)
 
 ```bash
 nginx
 ```
 
-#### 5.3 — Remove default config
+#### 5.3 — Remove Default Config
 
 ```bash
 rm -f /etc/nginx/sites-enabled/default
 ```
 
-#### 5.4 — Create reverse proxy config
+#### 5.4 — Create Reverse Proxy Config
 
 ```bash
 cat > /etc/nginx/sites-available/proxy << 'EOF'
@@ -641,7 +636,7 @@ nginx -s reload
 
 ### Phase 6 — AdGuard Home
 
-#### 6.1 — Free port 53 (occupied by systemd-resolved by default)
+#### 6.1 — Free Port 53 (Occupied by systemd-resolved by Default)
 
 ```bash
 systemctl stop systemd-resolved
@@ -659,7 +654,7 @@ curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/s
   | sh -s -- -v
 ```
 
-#### 6.3 — Configure DNS port to 53
+#### 6.3 — Configure DNS Port to 53
 
 ```bash
 sed -i 's/port: 5353/port: 53/' /opt/AdGuardHome/AdGuardHome.yaml
@@ -671,17 +666,17 @@ sed -i 's/port: 5353/port: 53/' /opt/AdGuardHome/AdGuardHome.yaml
 nohup /opt/AdGuardHome/AdGuardHome > /tmp/adguard.log 2>&1 &
 ```
 
-#### 6.5 — Complete setup wizard
+#### 6.5 — Complete the Setup Wizard
 
-Open `http://YOUR_PHONE_IP:3000` in your browser and complete the wizard:
+Open `http://<YOUR_PHONE_IP>:3000` in your browser and complete the wizard:
 
 - **Admin web interface port:** `8082`
 - **DNS server port:** `53`
-- Create admin username and password
+- Create an admin username and password
 
-#### 6.6 — Configure upstream DNS
+#### 6.6 — Configure Upstream DNS
 
-In AdGuard web UI: **Settings → DNS Settings → Upstream DNS Servers**
+In the AdGuard web UI: **Settings → DNS Settings → Upstream DNS Servers**
 
 ```
 https://dns.cloudflare.com/dns-query
@@ -690,9 +685,9 @@ tls://1.1.1.1
 tls://8.8.8.8
 ```
 
-Click **Test upstreams** then **Save**.
+Click **Test upstreams**, then **Save**.
 
-#### 6.7 — Add blocklists
+#### 6.7 — Add Blocklists
 
 Go to **Filters → DNS Blocklists → Add Blocklist → Add a custom list**:
 
@@ -704,13 +699,14 @@ Go to **Filters → DNS Blocklists → Add Blocklist → Add a custom list**:
 
 Click **Update Filters** after adding all lists.
 
-#### 6.8 — Point your router DNS to AdGuard
+#### 6.8 — Point Your Router DNS to AdGuard
 
 In your router's DHCP settings:
-- **Primary DNS:** `YOUR_PHONE_IP`
+
+- **Primary DNS:** `<YOUR_PHONE_IP>`
 - **Secondary DNS:** `1.1.1.1`
 
-#### 6.9 — Verify DNS blocking
+#### 6.9 — Verify DNS Blocking
 
 From Termux (outside DroidSpaces):
 
@@ -746,19 +742,19 @@ nohup filebrowser \
   > /tmp/filebrowser.log 2>&1 &
 ```
 
-After first start, the terminal will show the initial password. Copy and save it.
+The initial password will be printed to the terminal on first start. Copy and save it.
 
-#### 7.3 — First login
+#### 7.3 — First Login
 
-Open `http://YOUR_PHONE_IP:8081`
+Open `http://<YOUR_PHONE_IP>:8081`
 
-Default credentials: **admin / (password shown on first start)** — change immediately after first login.
+Default credentials: **admin / (password shown on first start)** — change it immediately after logging in.
 
 ---
 
 ### Phase 8 — Jellyfin Media Server
 
-#### 8.1 — Add Jellyfin repository
+#### 8.1 — Add Jellyfin Repository
 
 ```bash
 curl -fsSL https://repo.jellyfin.org/jellyfin_team.gpg.key \
@@ -771,21 +767,21 @@ EOF
 apt update
 ```
 
-#### 8.2 — Install Jellyfin and bundled ffmpeg
+#### 8.2 — Install Jellyfin and Bundled ffmpeg
 
 ```bash
 apt install -y jellyfin jellyfin-web jellyfin-ffmpeg6
 ```
 
-> ⚠️ Do NOT use the system ffmpeg. Debian 11 ships ffmpeg 4.3.x which is too old. `jellyfin-ffmpeg6` provides version 6.x.
+> ⚠️ Do **not** use the system ffmpeg. Debian 11 ships ffmpeg 4.3.x, which is too old. `jellyfin-ffmpeg6` provides version 6.x.
 
-#### 8.3 — Fix web client symlink
+#### 8.3 — Fix Web Client Symlink
 
 ```bash
 ln -sf /usr/share/jellyfin/web /usr/lib/jellyfin/bin/jellyfin-web
 ```
 
-#### 8.4 — Fix ffmpeg path
+#### 8.4 — Fix ffmpeg Path
 
 ```bash
 mkdir -p /root/.config/jellyfin
@@ -806,9 +802,9 @@ nohup jellyfin > /tmp/jellyfin.log 2>&1 &
 
 > ⚠️ Jellyfin takes 20–30 seconds to initialize. Wait before opening the browser.
 
-#### 8.6 — Complete setup wizard
+#### 8.6 — Complete the Setup Wizard
 
-Open `http://YOUR_PHONE_IP:8096` and complete the wizard.
+Open `http://<YOUR_PHONE_IP>:8096` and complete the wizard.
 
 When adding media libraries, use these paths:
 
@@ -833,7 +829,7 @@ wget -q $(curl -s https://api.github.com/repos/bastienwirtz/homer/releases/lates
 unzip homer.zip && rm homer.zip
 ```
 
-#### 9.2 — Configure dashboard
+#### 9.2 — Configure Dashboard
 
 ```bash
 cat > /var/www/homer/assets/config.yml << 'EOF'
@@ -888,7 +884,7 @@ EOF
 
 This generates live system stats as a JSON file served by Nginx at `/stats`.
 
-#### 10.1 — Create stats generator script
+#### 10.1 — Create Stats Generator Script
 
 ```bash
 cat > /var/www/html/stats-gen.sh << 'EOF'
@@ -929,31 +925,33 @@ EOF
 chmod +x /var/www/html/stats-gen.sh
 ```
 
-#### 10.2 — Generate first stats file immediately
+#### 10.2 — Generate First Stats File Immediately
 
 ```bash
 /var/www/html/stats-gen.sh > /var/www/html/stats
 cat /var/www/html/stats
 ```
 
-#### 10.3 — Set up cron to refresh every minute
+#### 10.3 — Set Up Cron to Refresh Every Minute
 
 ```bash
 (crontab -l 2>/dev/null; echo "* * * * * /var/www/html/stats-gen.sh > /var/www/html/stats 2>/dev/null") | crontab -
+
+# Start cron
 service cron start
 ```
 
-#### 10.4 — Test the endpoint
+#### 10.4 — Test the Endpoint
 
 ```bash
-curl http://192.168.100.149/stats
+curl http://<YOUR_PHONE_IP>/stats
 ```
 
 ---
 
 ### Phase 11 — Serveo Public Tunnel
 
-Serveo exposes your server to the internet via an SSH reverse tunnel. No port forwarding or static IP needed.
+Serveo exposes your server to the internet via an SSH reverse tunnel. No port forwarding or static IP is needed.
 
 #### 11.1 — Install autossh
 
@@ -961,22 +959,22 @@ Serveo exposes your server to the internet via an SSH reverse tunnel. No port fo
 apt install -y autossh
 ```
 
-#### 11.2 — Generate SSH key for Serveo
+#### 11.2 — Generate SSH Key for Serveo
 
 ```bash
 ssh-keygen -t rsa -b 4096 -f ~/.ssh/serveo_key -N ""
 ```
 
-#### 11.3 — Register your key with Serveo
+#### 11.3 — Register Your Key with Serveo
 
 ```bash
 # Print your public key fingerprint
 ssh-keygen -lf ~/.ssh/serveo_key.pub
 ```
 
-Visit `https://console.serveo.net` and log in with Google or GitHub. Add your public key to claim a custom subdomain like `sudo`.
+Visit `https://console.serveo.net` and log in with Google or GitHub. Add your public key to claim a custom subdomain (e.g. `sudo`).
 
-#### 11.4 — Test tunnel manually first
+#### 11.4 — Test the Tunnel Manually First
 
 ```bash
 ssh -i ~/.ssh/serveo_key \
@@ -985,15 +983,15 @@ ssh -i ~/.ssh/serveo_key \
     serveo.net
 ```
 
-If successful you will see:
+If successful, you will see:
 
 ```
 Forwarding HTTP traffic from https://YOURSERVERNAME.serveousercontent.com
 ```
 
-Press Ctrl+C after confirming it works.
+Press `Ctrl+C` after confirming it works.
 
-#### 11.5 — Create systemd service for persistent tunnel
+#### 11.5 — Create a systemd Service for a Persistent Tunnel
 
 ```bash
 cat > /etc/systemd/system/serveo.service << 'EOF'
@@ -1024,12 +1022,15 @@ systemctl enable serveo
 systemctl start serveo
 ```
 
-> **Note:** `ExecStartPre=/bin/sleep 15` gives the network time to stabilize before attempting the tunnel connection on boot.
+> **Note:** `ExecStartPre=/bin/sleep 15` gives the network time to stabilize before the tunnel attempts to connect on boot.
 
-#### 11.6 — Verify tunnel is active
+#### 11.6 — Verify the Tunnel Is Active
 
 ```bash
+# Check service status
 systemctl status serveo
+
+# Test from outside your network
 curl -I https://YOURSERVERNAME.serveousercontent.com
 ```
 
@@ -1041,7 +1042,7 @@ Expected: `HTTP/2 200`
 
 This script runs every time you enter the DroidSpaces container, starting all services automatically.
 
-#### 12.1 — Create the script
+#### 12.1 — Create the Script
 
 ```bash
 cat > /opt/start-server.sh << 'EOF'
@@ -1096,7 +1097,7 @@ pkill jellyfin 2>/dev/null; sleep 1
 nohup jellyfin > /tmp/jellyfin.log 2>&1 &
 echo "    Jellyfin starting (takes ~20 seconds)..."
 
-# 7. Stats + Cron
+# 7. Stats
 /var/www/html/stats-gen.sh > /var/www/html/stats 2>/dev/null
 service cron start 2>/dev/null
 
@@ -1118,9 +1119,9 @@ EOF
 chmod +x /opt/start-server.sh
 ```
 
-> **Note:** The Serveo tunnel is managed by systemd (`serveo.service`) and not started in this script to avoid duplicate tunnel connections.
+> **Note:** The Serveo tunnel is managed by systemd (`serveo.service`) and is not started in this script to avoid duplicate tunnel connections.
 
-#### 12.2 — Add to .bashrc for automatic execution
+#### 12.2 — Add to .bashrc for Automatic Execution
 
 ```bash
 echo 'bash /opt/start-server.sh' >> ~/.bashrc
@@ -1136,20 +1137,20 @@ From now on, every time you enter the container the script runs automatically an
 
 **Step 1 — Disable MAC Randomization on your phone:**
 
-Settings → WiFi → Your Network → Advanced → MAC Address → **Use Device MAC**
+Settings → Wi-Fi → Your Network → Advanced → MAC Address → **Use Device MAC**
 
-**Step 2 — Set DHCP Reservation in Router:**
+**Step 2 — Set a DHCP Reservation in your router:**
 
-1. Login to your router admin page (usually `192.168.1.1`)
+1. Log in to your router admin page (usually `192.168.1.1`)
 2. Find **DHCP Reservation** / **Static DHCP** / **Address Reservation**
 3. Add your phone's MAC address and assign it a fixed IP
-4. Save and reboot router
+4. Save and reboot the router
 
 ### Router DNS Setup
 
 In your router's DHCP/DNS settings:
 
-- **Primary DNS:** `YOUR_PHONE_IP`
+- **Primary DNS:** `<YOUR_PHONE_IP>`
 - **Secondary DNS:** `1.1.1.1` (fallback)
 
 This routes all DNS queries from every device on your network through AdGuard for network-wide ad blocking.
@@ -1160,12 +1161,12 @@ This routes all DNS queries from every device on your network through AdGuard fo
 
 | Location | Purpose | Notes |
 |---|---|---|
-| Debian container (`/`) | OS + all services | ~5–6GB used |
+| Debian container (`/`) | OS + all services | ~5–6 GB used |
 | `/storage/emulated/0/` | Android internal storage | For media files |
 | `/srv/shared/` | Symlinks to Android storage | Accessed by Jellyfin & File Browser |
 | `/tmp/` | Service logs | Cleared on reboot |
 
-### Check disk usage
+### Check Disk Usage
 
 ```bash
 df -h /
@@ -1173,7 +1174,7 @@ du -sh /* 2>/dev/null | sort -rh | head -10
 apt clean && apt autoremove -y
 ```
 
-### Thermal zones (Samsung S10+ / Exynos 9820)
+### Thermal Zones (Samsung S10+ / Exynos 9820)
 
 | Sensor | Path |
 |---|---|
@@ -1231,10 +1232,11 @@ apt clean && apt autoremove -y
 
 ## Troubleshooting
 
-### Test all services at once
+### Test All Services at Once
 
 ```bash
 IP=$(hostname -I | awk '{print $1}')
+curl -s -o /dev/null -w "SSH:         Port 2222\n"
 curl -s -o /dev/null -w "Homer:       %{http_code}\n" http://$IP:8080
 curl -s -o /dev/null -w "AdGuard:     %{http_code}\n" http://$IP:8082
 curl -s -o /dev/null -w "FileBrowser: %{http_code}\n" http://$IP:8081
@@ -1244,7 +1246,7 @@ curl -s -o /dev/null -w "Website:     %{http_code}\n" http://$IP:80
 
 Expected: `200` or `302` for all services.
 
-### Nginx fails to reload — pid error
+### Nginx Fails to Reload — PID Error
 
 ```bash
 nginx_pid=$(ps aux | grep "nginx: master" | grep -v grep | awk '{print $2}')
@@ -1252,7 +1254,7 @@ echo $nginx_pid > /run/nginx.pid
 nginx -s reload
 ```
 
-### AdGuard won't start — port 53 in use
+### AdGuard Won't Start — Port 53 in Use
 
 ```bash
 systemctl stop systemd-resolved
@@ -1261,7 +1263,7 @@ pkill AdGuardHome
 nohup /opt/AdGuardHome/AdGuardHome > /tmp/adguard.log 2>&1 &
 ```
 
-### File Browser only accessible on localhost
+### File Browser Only Accessible on Localhost
 
 Always include the `-a 0.0.0.0` flag:
 
@@ -1271,7 +1273,7 @@ nohup filebrowser -r /srv/shared -p 8081 -a 0.0.0.0 \
   -d /opt/filebrowser/filebrowser.db > /tmp/filebrowser.log 2>&1 &
 ```
 
-### Jellyfin — ffmpeg version error
+### Jellyfin — ffmpeg Version Error
 
 ```bash
 apt install -y jellyfin-ffmpeg6
@@ -1284,34 +1286,37 @@ cat > /root/.config/jellyfin/encoding.xml << 'EOF'
 EOF
 ```
 
-### Jellyfin — web UI not found (404)
+### Jellyfin — Web UI Not Found (404)
 
 ```bash
 ln -sf /usr/share/jellyfin/web /usr/lib/jellyfin/bin/jellyfin-web
 ```
 
-### SSH — "connection closed with error: end of file"
+### SSH — "Connection Closed with Error: End of File"
 
 ```bash
+# Create missing privilege separation directory
 mkdir -p /run/sshd
 chmod 755 /run/sshd
 /usr/sbin/sshd
 ```
 
-### Serveo — 502 Bad Gateway on boot
+### Serveo — 502 Bad Gateway on Boot
+
+The tunnel tries to connect before the network is ready. The systemd service includes `ExecStartPre=/bin/sleep 15` as a delay. If it is still failing:
 
 ```bash
 systemctl restart serveo
 systemctl status serveo
 ```
 
-### Docker / Podman not working
+### Docker / Podman Not Working
 
-Docker and Podman are **not supported** on this environment. The Android kernel 4.14 lacks cgroup device mounting support, and user namespaces are disabled. Use native service installation as documented in this guide.
+Docker and Podman are **not supported** on this environment. The Android kernel 4.14 lacks cgroup device mounting support and user namespaces are disabled. Use native service installation as documented in this guide.
 
-### AdGuard login loop behind reverse proxy
+### AdGuard Login Loop Behind Reverse Proxy
 
-This is caused by cookies being set with path `/` instead of `/adguard/`. The Nginx config includes `proxy_cookie_path / /adguard/;` to fix this. Make sure your proxy config matches Phase 5.
+This is caused by cookies being set with path `/` instead of `/adguard/`. The Nginx config includes `proxy_cookie_path / /adguard/;` to fix this. Make sure your proxy config matches [Phase 5](#phase-5--nginx-web-server).
 
 ---
 
@@ -1321,9 +1326,9 @@ This is caused by cookies being set with path `/` instead of `/adguard/`. The Ng
 - Change the default **File Browser password** immediately after first login
 - AdGuard Home and File Browser require login credentials
 - Serveo provides **HTTPS automatically** via their SSL certificate
-- AdGuard blocks malicious domains at DNS level for all network devices
+- AdGuard blocks malicious domains at the DNS level for all network devices
 - For additional security, consider adding **HTTP Basic Auth** at the Nginx level for sensitive services
-- Consider switching to **SSH key authentication** and disabling password auth for SSH
+- Consider switching to **SSH key authentication** and disabling password authentication for SSH
 
 ---
 
@@ -1335,7 +1340,7 @@ Run this on the server to verify all services are running:
 ps aux | grep -E "nginx|AdGuard|filebrowser|jellyfin|autossh|sshd" | grep -v grep
 ```
 
-Check Serveo tunnel is live:
+Check that the Serveo tunnel is live:
 
 ```bash
 curl -I https://YOURSERVERNAME.serveousercontent.com
@@ -1343,7 +1348,7 @@ curl -I https://YOURSERVERNAME.serveousercontent.com
 
 Expected: `HTTP/2 200`
 
-Check DNS blocking is working:
+Check that DNS blocking is working:
 
 ```bash
 nslookup doubleclick.net 192.168.100.149
