@@ -18,6 +18,7 @@
 - [Limitations](#limitations)
 - [Architecture](#architecture)
 - [Services](#services)
+- [Screenshots](#screenshots)
 - [Installation](#installation)
   - [Phase 1 — Prepare Android](#phase-1--prepare-android)
   - [Phase 2 — Enter Debian Container](#phase-2--enter-debian-container)
