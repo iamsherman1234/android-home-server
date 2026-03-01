@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sudo.local Server</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #080810; --card: #0e0e1c; --border: #1e1e3a;
+      --cyan: #00f5ff; --pink: #ff2d78; --yellow: #ffe000;
+      --green: #00ff88; --purple: #b44dff; --orange: #ff6b2b;
+      --red: #ff4444; --text: #e8e8f0; --muted: #5a5a7a;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--text); font-family:'Syne',sans-serif; min-height:100vh; overflow-x:hidden; }
+    body::before {
+      content:''; position:fixed; inset:0;
+      background-image: linear-gradient(rgba(0,245,255,0.03) 1px,transparent 1px), linear-gradient(90deg,rgba(0,245,255,0.03) 1px,transparent 1px);
+      background-size:60px 60px; animation:gridMove 20s linear infinite; pointer-events:none; z-index:0;
+    }
+    @keyframes gridMove { 0%{transform:translateY(0)} 100%{transform:translateY(60px)} }
+    .orb { position:fixed; border-radius:50%; filter:blur(80px); opacity:0.12; pointer-events:none; z-index:0; animation:orbFloat 8s ease-in-out infinite; }
+    .orb-1{width:400px;height:400px;background:var(--cyan);top:-100px;left:-100px;animation-delay:0s}
+    .orb-2{width:350px;height:350px;background:var(--pink);top:30%;right:-80px;animation-delay:-3s}
+    .orb-3{width:300px;height:300px;background:var(--purple);bottom:-50px;left:30%;animation-delay:-6s}
+    @keyframes orbFloat { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-30px) scale(1.05)} }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
+
+    .container { position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:40px 24px; }
+
+    header { display:flex; align-items:center; justify-content:space-between; margin-bottom:60px; animation:fadeDown 0.6s ease both; }
+    .logo { display:flex; align-items:center; gap:12px; }
+    .logo-icon { width:42px;height:42px;background:linear-gradient(135deg,var(--cyan),var(--purple));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px; }
+    .logo-text { font-family:'Space Mono',monospace; font-size:1.1em; font-weight:700; }
+    .logo-text span { color:var(--cyan); }
+    .status-pill { display:flex;align-items:center;gap:8px;background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);border-radius:100px;padding:8px 16px;font-family:'Space Mono',monospace;font-size:0.75em;color:var(--green); }
+    .status-dot { width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 2s ease-in-out infinite; }
+
+    .hero { text-align:center; margin-bottom:60px; animation:fadeUp 0.7s ease 0.1s both; }
+    .hero-tag { display:inline-block;font-family:'Space Mono',monospace;font-size:0.75em;color:var(--cyan);background:rgba(0,245,255,0.08);border:1px solid rgba(0,245,255,0.2);border-radius:4px;padding:6px 14px;margin-bottom:24px;letter-spacing:2px;text-transform:uppercase; }
+    .hero h1 { font-size:clamp(2.5em,8vw,5em);font-weight:800;line-height:1.0;margin-bottom:20px;background:linear-gradient(135deg,#fff 0%,var(--cyan) 40%,var(--pink) 70%,var(--yellow) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+    .hero p { font-size:1.05em;color:var(--muted);max-width:500px;margin:0 auto 30px;line-height:1.7; }
+    .hero-meta { display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap; }
+    .meta-item { display:flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:0.72em;color:var(--muted); }
+
+    .section-title { font-family:'Space Mono',monospace;font-size:0.7em;text-transform:uppercase;letter-spacing:3px;color:var(--muted);margin-bottom:20px;display:flex;align-items:center;gap:12px; }
+    .section-title::after { content:'';flex:1;height:1px;background:var(--border); }
+
+    .stats-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:50px;animation:fadeUp 0.6s ease 0.2s both; }
+    .stat-card { background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px;position:relative;overflow:hidden; }
+    .stat-card::after { content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent); }
+    .stat-label { font-family:'Space Mono',monospace;font-size:0.65em;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:10px; }
+    .stat-value { font-family:'Space Mono',monospace;font-size:1.6em;font-weight:700;color:var(--accent);margin-bottom:8px; transition: color 0.3s ease; }
+    .stat-bar { height:4px;background:var(--border);border-radius:2px;overflow:hidden; }
+    .stat-bar-fill { height:100%;border-radius:2px;background:var(--accent);transition:width 1s ease, background-color 0.3s ease; }
+    .stat-sub { font-size:0.72em;color:var(--muted);margin-top:6px;font-family:'Space Mono',monospace; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    
+    .stat-cpu{--accent:var(--cyan)} .stat-ram{--accent:var(--purple)} .stat-disk{--accent:var(--yellow)} 
+    .stat-uptime{--accent:var(--green)} .stat-battery{--accent:var(--green)} .stat-temp{--accent:var(--cyan)}
+
+    .services-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:50px; }
+    .service-card { background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;text-decoration:none;color:var(--text);position:relative;overflow:hidden;transition:transform 0.3s ease,border-color 0.3s ease,box-shadow 0.3s ease;animation:fadeUp 0.6s ease both; }
+    .service-card::before { content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent-color),transparent 60%);opacity:0;transition:opacity 0.3s ease; }
+    .service-card:hover { transform:translateY(-6px);border-color:var(--accent-color);box-shadow:0 20px 60px rgba(0,0,0,0.4),0 0 30px var(--accent-glow); }
+    .service-card:hover::before { opacity:0.06; }
+    .card-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:16px; }
+    .card-icon { width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--icon-bg); }
+    .card-status { display:flex;align-items:center;gap:5px;font-family:'Space Mono',monospace;font-size:0.62em;padding:3px 10px;border-radius:100px; }
+    .card-status.online  { background:rgba(0,255,136,0.1); color:var(--green); border:1px solid rgba(0,255,136,0.25); }
+    .card-status.offline { background:rgba(255,68,68,0.1);  color:var(--red);   border:1px solid rgba(255,68,68,0.25); }
+    .card-status.checking{ background:rgba(255,224,0,0.1);  color:var(--yellow);border:1px solid rgba(255,224,0,0.25); }
+    .card-status-dot { width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 2s infinite; }
+    .card-title { font-size:1.1em;font-weight:700;margin-bottom:4px; }
+    .card-desc { font-size:0.82em;color:var(--muted);line-height:1.5;margin-bottom:16px; }
+    .card-port { font-family:'Space Mono',monospace;font-size:0.68em;color:var(--accent-color);display:flex;align-items:center;gap:6px; }
+    .card-port::before { content:'';width:14px;height:1px;background:var(--accent-color); }
+    .card-cyan  {--accent-color:var(--cyan);  --accent-glow:rgba(0,245,255,0.15);  --icon-bg:rgba(0,245,255,0.1)}
+    .card-pink  {--accent-color:var(--pink);  --accent-glow:rgba(255,45,120,0.15); --icon-bg:rgba(255,45,120,0.1)}
+    .card-green {--accent-color:var(--green); --accent-glow:rgba(0,255,136,0.15);  --icon-bg:rgba(0,255,136,0.1)}
+    .card-purple{--accent-color:var(--purple);--accent-glow:rgba(180,77,255,0.15); --icon-bg:rgba(180,77,255,0.1)}
+    .card-orange{--accent-color:var(--orange);--accent-glow:rgba(255,107,43,0.15); --icon-bg:rgba(255,107,43,0.1)}
+    .card-yellow{--accent-color:var(--yellow);--accent-glow:rgba(255,224,0,0.15);  --icon-bg:rgba(255,224,0,0.1)}
+    .service-card:nth-child(1){animation-delay:0.2s} .service-card:nth-child(2){animation-delay:0.3s}
+    .service-card:nth-child(3){animation-delay:0.4s} .service-card:nth-child(4){animation-delay:0.5s}
+    .service-card:nth-child(5){animation-delay:0.6s} .service-card:nth-child(6){animation-delay:0.7s}
+
+    footer { text-align:center;padding:30px 0 20px;border-top:1px solid var(--border);animation:fadeUp 0.6s ease 0.8s both; }
+    .footer-logo { font-family:'Space Mono',monospace;font-size:0.9em;color:var(--muted);margin-bottom:8px; }
+    .footer-logo span { color:var(--cyan); }
+    .footer-sub { font-size:0.72em;color:var(--border);font-family:'Space Mono',monospace; }
+    .footer-time { font-family:'Space Mono',monospace;font-size:0.7em;color:var(--muted);margin-top:8px; }
+    ::-webkit-scrollbar{width:6px} ::-webkit-scrollbar-track{background:var(--bg)} ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+    @media(max-width:600px){header{flex-direction:column;gap:16px;text-align:center}.hero-meta{flex-direction:column;gap:10px}}
+  </style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="container">
+  <header>
+    <div class="logo">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-text"><span>sudo</span>.local</div>
+    </div>
+    <div class="status-pill">
+      <div class="status-dot"></div>
+      <span id="overall-status">Checking...</span>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-tag">// Home Server</div>
+    <h1>sudo.local<br>Server</h1>
+    <p>Your personal cloud — media, files, DNS, and more. Running 24/7 on a Samsung S10+.</p>
+    <div class="hero-meta">
+      <div class="meta-item">📱 Samsung S10+ · InfinityOS</div>
+      <div class="meta-item">🐧 Debian 11 Bullseye</div>
+      <div class="meta-item">⚙️ DroidSpaces · ARM64</div>
+    </div>
+  </div>
+
+  <div class="section-title">Live System Stats</div>
+  <div class="stats-grid">
+    <div class="stat-card stat-cpu">
+      <div class="stat-label">CPU Usage</div>
+      <div class="stat-value" id="cpu-val">—</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="cpu-bar" style="width:0%"></div></div>
+      <div class="stat-sub" id="cpu-sub">8 Cores · ARM64</div>
+    </div>
+    <div class="stat-card stat-ram">
+      <div class="stat-label">Memory</div>
+      <div class="stat-value" id="ram-val">—</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="ram-bar" style="width:0%"></div></div>
+      <div class="stat-sub" id="ram-sub">Loading...</div>
+    </div>
+    <div class="stat-card stat-disk">
+      <div class="stat-label">Storage</div>
+      <div class="stat-value" id="disk-val">—</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="disk-bar" style="width:0%"></div></div>
+      <div class="stat-sub" id="disk-sub">Loading...</div>
+    </div>
+    <div class="stat-card stat-uptime">
+      <div class="stat-label">Uptime</div>
+      <div class="stat-value" id="uptime-val">—</div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="width:100%"></div></div>
+      <div class="stat-sub" id="load-sub">Load: —</div>
+    </div>
+    <div class="stat-card stat-battery">
+      <div class="stat-label">Battery Power</div>
+      <div class="stat-value" id="bat-val">—</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="bat-bar" style="width:0%"></div></div>
+      <div class="stat-sub" id="bat-sub">Status: —</div>
+    </div>
+    <div class="stat-card stat-temp">
+      <div class="stat-label">CPU Temp</div>
+      <div class="stat-value" id="cpu-temp-val">—</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="cpu-temp-bar" style="width:0%"></div></div>
+      <div class="stat-sub">Exynos BIG Cores</div>
+    </div>
+    <div class="stat-card stat-temp">
+      <div class="stat-label">GPU Temp</div>
+      <div class="stat-value" id="gpu-temp-val">—</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="gpu-temp-bar" style="width:0%"></div></div>
+      <div class="stat-sub">G3D Graphics</div>
+    </div>
+    <div class="stat-card stat-temp">
+      <div class="stat-label">Chassis Temp</div>
+      <div class="stat-value" id="chas-temp-val">—</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="chas-temp-bar" style="width:0%"></div></div>
+      <div class="stat-sub">System Surface</div>
+    </div>
+    <div class="stat-card stat-temp">
+      <div class="stat-label">Battery Temp</div>
+      <div class="stat-value" id="bat-temp-val">—</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="bat-temp-bar" style="width:0%"></div></div>
+      <div class="stat-sub">Power Supply</div>
+    </div>
+  </div>
+
+  <div class="section-title">Services</div>
+  <div class="services-grid">
+    <a href="#" class="service-card card-cyan" id="card-homer">
+      <div class="card-header">
+        <div class="card-icon">🏠</div>
+        <div class="card-status checking" id="status-homer"><div class="card-status-dot"></div> Checking</div>
+      </div>
+      <div class="card-title">Homer</div>
+      <div class="card-desc">Unified dashboard for all your self-hosted services.</div>
+      <div class="card-port">:8080 · Dashboard</div>
+    </a>
+    <a href="#" class="service-card card-pink" id="card-adguard">
+      <div class="card-header">
+        <div class="card-icon">🛡️</div>
+        <div class="card-status checking" id="status-adguard"><div class="card-status-dot"></div> Checking</div>
+      </div>
+      <div class="card-title">AdGuard Home</div>
+      <div class="card-desc">Network-wide DNS ad blocking for every device.</div>
+      <div class="card-port">:8082 · DNS · AdBlock</div>
+    </a>
+    <a href="#" class="service-card card-purple" id="card-jellyfin">
+      <div class="card-header">
+        <div class="card-icon">🎬</div>
+        <div class="card-status checking" id="status-jellyfin"><div class="card-status-dot"></div> Checking</div>
+      </div>
+      <div class="card-title">Jellyfin</div>
+      <div class="card-desc">Stream your personal media library — movies, music, photos.</div>
+      <div class="card-port">:8096 · Media Server</div>
+    </a>
+    <a href="#" class="service-card card-green" id="card-files">
+      <div class="card-header">
+        <div class="card-icon">📁</div>
+        <div class="card-status checking" id="status-files"><div class="card-status-dot"></div> Checking</div>
+      </div>
+      <div class="card-title">File Browser</div>
+      <div class="card-desc">Browse, upload and manage files from any device.</div>
+      <div class="card-port">:8081 · File Manager</div>
+    </a>
+    <a href="#" class="service-card card-orange" id="card-nginx">
+      <div class="card-header">
+        <div class="card-icon">🌐</div>
+        <div class="card-status checking" id="status-nginx"><div class="card-status-dot"></div> Checking</div>
+      </div>
+      <div class="card-title">Nginx</div>
+      <div class="card-desc">Web server and reverse proxy powering this page.</div>
+      <div class="card-port">:80 · Web Server</div>
+    </a>
+    <div class="service-card card-yellow" style="cursor:default;">
+      <div class="card-header">
+        <div class="card-icon">🔐</div>
+        <div class="card-status online"><div class="card-status-dot"></div> Active</div>
+      </div>
+      <div class="card-title">SSH Access</div>
+      <div class="card-desc">Secure shell access from any terminal or SSH client.</div>
+      <div class="card-port">:2222 · OpenSSH</div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-logo"><span>sudo</span>.local · Home Server</div>
+    <div class="footer-sub" id="footer-info">Debian 11 · DroidSpaces · Samsung S10+</div>
+    <div class="footer-time" id="clock">--:--:--</div>
+  </footer>
+</div>
+
+<script>
+  const HOST = window.location.hostname;
+  const isServeo = HOST.includes('serveo');
+
+  // Service URL map — works both locally and via Serveo
+  const serviceLinks = {
+    homer:    isServeo ? `https://${HOST}/`         : `http://${HOST}:8080`,
+    adguard:  isServeo ? `https://${HOST}/adguard/` : `http://${HOST}:8082`,
+    jellyfin: isServeo ? `https://${HOST}/media/`   : `http://${HOST}:8096`,
+    files:    isServeo ? `https://${HOST}/files/`   : `http://${HOST}:8081`,
+    nginx:    isServeo ? `https://${HOST}/`         : `http://${HOST}:80`,
+  };
+
+  // Service health check URLs (always use local ports for checking)
+  const checkUrls = {
+    homer:    `http://192.168.100.149:8080`,
+    adguard:  `http://192.168.100.149:8082`,
+    jellyfin: `http://192.168.100.149:8096`,
+    files:    `http://192.168.100.149:8081`,
+    nginx:    `http://192.168.100.149:80`,
+  };
+
+  // Set card hrefs
+  Object.entries(serviceLinks).forEach(([key, url]) => {
+    const card = document.getElementById(`card-${key}`);
+    if (card) card.href = url;
+  });
+
+  document.getElementById('footer-info').textContent = HOST + ' · Debian 11 · DroidSpaces · Samsung S10+';
+
+  // Clock
+  setInterval(() => {
+    document.getElementById('clock').textContent = new Date().toLocaleTimeString();
+  }, 1000);
+
+  // Fetch /stats JSON
+  async function fetchStats() {
+    try {
+      const r = await fetch('/stats');
+      const d = await r.json();
+      
+      // Original Stats
+      document.getElementById('cpu-val').textContent = d.cpu + '%';
+      document.getElementById('cpu-bar').style.width = d.cpu + '%';
+      document.getElementById('cpu-sub').textContent = d.cpu_info || '8 Cores · ARM64';
+      
+      const rp = Math.round(d.ram_used / d.ram_total * 100);
+      document.getElementById('ram-val').textContent = rp + '%';
+      document.getElementById('ram-bar').style.width = rp + '%';
+      document.getElementById('ram-sub').textContent = d.ram_used + 'MB used of ' + d.ram_total + 'MB';
+      
+      document.getElementById('disk-val').textContent = d.disk_pct + '%';
+      document.getElementById('disk-bar').style.width = d.disk_pct + '%';
+      document.getElementById('disk-sub').textContent = d.disk_used + 'GB used of ' + d.disk_total + 'GB';
+      
+      document.getElementById('uptime-val').textContent = d.uptime;
+      document.getElementById('load-sub').textContent = 'Load: ' + d.load;
+
+      // Battery 
+      document.getElementById('bat-val').textContent = (d.battery_pct !== undefined ? d.battery_pct : '--') + '%';
+      document.getElementById('bat-bar').style.width = (d.battery_pct || 0) + '%';
+      document.getElementById('bat-sub').textContent = 'Status: ' + (d.battery_status || 'Unknown');
+
+      // Helper function for dynamic temperature colors
+      const updateTemp = (id, tempVal) => {
+        const valEl = document.getElementById(`${id}-val`);
+        const barEl = document.getElementById(`${id}-bar`);
+        if (!valEl || !barEl || tempVal === undefined) return;
+        
+        const t = parseFloat(tempVal);
+        valEl.textContent = t + '°C';
+        let tempPct = Math.min(100, Math.max(0, (t / 80) * 100)); // Scale to 80C max
+        barEl.style.width = tempPct + '%';
+        
+        if (t > 45) {
+          barEl.style.backgroundColor = 'var(--red)';
+          valEl.style.color = 'var(--red)';
+        } else if (t >= 40) {
+          barEl.style.backgroundColor = 'var(--orange)';
+          valEl.style.color = 'var(--orange)';
+        } else {
+          barEl.style.backgroundColor = 'var(--cyan)';
+          valEl.style.color = 'var(--cyan)';
+        }
+      };
+
+      // Thermals
+      updateTemp('cpu-temp', d.cpu_temp);
+      updateTemp('gpu-temp', d.gpu_temp);
+      updateTemp('chas-temp', d.chas_temp);
+      updateTemp('bat-temp', d.bat_temp);
+
+    } catch(e) {
+      document.getElementById('cpu-val').textContent = 'N/A';
+      document.getElementById('ram-val').textContent = 'N/A';
+      document.getElementById('disk-val').textContent = 'N/A';
+      document.getElementById('uptime-val').textContent = 'N/A';
+      document.getElementById('bat-val').textContent = 'N/A';
+    }
+  }
+
+  // Check service status via no-cors fetch
+  async function checkService(key) {
+    const el = document.getElementById('status-' + key);
+    try {
+      await fetch(checkUrls[key], { mode: 'no-cors', signal: AbortSignal.timeout(3000) });
+      el.className = 'card-status online';
+      el.innerHTML = '<div class="card-status-dot"></div> Online';
+    } catch(e) {
+      if (e.name === 'TimeoutError' || e.name === 'AbortError') {
+        el.className = 'card-status offline';
+        el.innerHTML = '<div class="card-status-dot"></div> Offline';
+      } else {
+        el.className = 'card-status online';
+        el.innerHTML = '<div class="card-status-dot"></div> Online';
+      }
+    }
+  }
+
+  async function runAll() {
+    await Promise.all(Object.keys(serviceLinks).map(checkService));
+    const anyOff = [...document.querySelectorAll('.card-status')].some(s => s.classList.contains('offline'));
+    document.getElementById('overall-status').textContent = anyOff ? 'Degraded — Check Services' : 'All Systems Operational';
+  }
+
+  fetchStats();
+  runAll();
+  setInterval(fetchStats, 10000); // Updates stats every 10 seconds
+  setInterval(runAll, 30000);     // Checks service health every 30 seconds
+</script>
+</body>
+</html>
+
