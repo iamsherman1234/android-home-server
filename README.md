@@ -2,11 +2,11 @@
 
 > A fully self-hosted personal cloud running on a rooted Samsung S10+ via DroidSpaces, exposed to the internet using Serveo reverse tunneling — no port forwarding, no static IP required.
 
-![Platform](https://img.shields.io/badge/Platform-Android%20(Rooted)-green?style=flat-square&logo=android)
-![OS](https://img.shields.io/badge/Container-Debian%2011%20Bullseye-red?style=flat-square&logo=debian)
-![Arch](https://img.shields.io/badge/Arch-ARM64-blue?style=flat-square)
-![Kernel](https://img.shields.io/badge/Kernel-4.14%20FreeRunner-orange?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
+[![Platform](https://img.shields.io/badge/Platform-Android%20(Rooted)-green?style=flat-square&logo=android)](https://www.android.com/)
+[![OS](https://img.shields.io/badge/Container-Debian%2011%20Bullseye-red?style=flat-square&logo=debian)](https://projectinfinity-x.com/downloads/beyond2lte)
+[![Arch](https://img.shields.io/badge/Arch-ARM64-blue?style=flat-square)](https://archlinux.org/)
+[![Kernel](https://img.shields.io/badge/Kernel-4.14%20FreeRunner-orange?style=flat-square)](https://www.kernel.org/)
+[![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](https://opensource.org/license/mit)
 
 ---
 
