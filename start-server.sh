@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "================================"
 echo "   Starting Home Server..."
 echo "================================"
@@ -62,16 +63,23 @@ if [ "$FIRST_SESSION" = true ]; then
     echo "[6/6] Starting Tailscale..."
     pkill tailscaled 2>/dev/null
     pkill tailscale 2>/dev/null
-    sleep 2
+    # Wait until fully dead
+    while pgrep tailscaled > /dev/null; do sleep 1; done
+    sleep 1
     rm -f /var/run/tailscale/tailscaled.sock
     mkdir -p /var/run/tailscale
     tailscaled --state=/var/lib/tailscale/tailscaled.state \
                --tun=userspace-networking \
                --socket=/var/run/tailscale/tailscaled.sock > /tmp/tailscale.log 2>&1 &
-    sleep 5
+    # Wait until socket is ready
+    for i in $(seq 1 15); do
+        [ -S /var/run/tailscale/tailscaled.sock ] && break
+        sleep 1
+    done
     tailscale up --reset
     sleep 2
-    echo "    Tailscale OK"
+    TSIP=$(tailscale ip 2>/dev/null | grep "^100\." | head -1)
+    echo "    Tailscale OK — ${TSIP}"
 
     # 8. Stats + Cron
     /var/www/html/stats-gen.sh > /var/www/html/stats 2>/dev/null
