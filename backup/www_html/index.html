@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sudo.local — Home Server</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:     #06060f;
+      --card:   #0c0c1a;
+      --card2:  #101024;
+      --border: #1a1a30;
+      --border2:#252540;
+      --cyan:   #00f0ff;
+      --pink:   #ff2d6e;
+      --yellow: #ffe000;
+      --green:  #00ff88;
+      --purple: #b44dff;
+      --orange: #ff6b2b;
+      --red:    #ff4455;
+      --text:   #eeeef8;
+      --muted:  #4a4a6a;
+      --muted2: #7a7a9a;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Background effects ── */
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(0,240,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,240,255,0.025) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridDrift 25s linear infinite;
+    }
+    @keyframes gridDrift { to { background-position: 50px 50px; } }
+
+    .orb {
+      position: fixed; border-radius: 50%; filter: blur(100px);
+      pointer-events: none; z-index: 0;
+    }
+    .orb-1 { width:500px; height:500px; background:var(--cyan);   opacity:0.07; top:-150px;  left:-150px;  animation: drift1 12s ease-in-out infinite; }
+    .orb-2 { width:400px; height:400px; background:var(--pink);   opacity:0.07; top:40%;    right:-120px; animation: drift2 15s ease-in-out infinite; }
+    .orb-3 { width:350px; height:350px; background:var(--purple); opacity:0.06; bottom:-80px; left:35%;   animation: drift3 10s ease-in-out infinite; }
+    @keyframes drift1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,-40px)} }
+    @keyframes drift2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-30px,50px)} }
+    @keyframes drift3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(30px,-25px)} }
+
+    /* ── Scanline overlay ── */
+    body::after {
+      content:''; position:fixed; inset:0; z-index:999; pointer-events:none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    }
+
+    /* ── Layout ── */
+    .container { position:relative; z-index:1; max-width:1120px; margin:0 auto; padding:48px 28px; }
+
+    /* ── Animations ── */
+    @keyframes fadeUp   { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes pulse    { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.75)} }
+    @keyframes shimmer  { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+
+    /* ── Header ── */
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 64px; animation: fadeDown 0.5s ease both;
+    }
+    .logo { display:flex; align-items:center; gap:14px; }
+    .logo-mark {
+      width:46px; height:46px; border-radius:12px;
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      display:flex; align-items:center; justify-content:center;
+      font-size:22px; box-shadow: 0 0 24px rgba(0,240,255,0.3);
+    }
+    .logo-text { font-family:'Space Mono',monospace; font-size:1.05em; font-weight:700; letter-spacing:1px; }
+    .logo-text em { color:var(--cyan); font-style:normal; }
+    .logo-sub { font-family:'Space Mono',monospace; font-size:0.65em; color:var(--muted2); margin-top:2px; letter-spacing:2px; }
+
+    .sys-pill {
+      display:flex; align-items:center; gap:8px;
+      background: rgba(0,255,136,0.08);
+      border: 1px solid rgba(0,255,136,0.2);
+      border-radius:100px; padding:8px 18px;
+      font-family:'Space Mono',monospace; font-size:0.7em; color:var(--green);
+    }
+    .sys-dot { width:7px; height:7px; border-radius:50%; background:var(--green); animation:pulse 2s ease-in-out infinite; }
+
+    /* ── Hero ── */
+    .hero { text-align:center; margin-bottom:70px; animation:fadeUp 0.6s ease 0.1s both; }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:8px;
+      font-family:'Space Mono',monospace; font-size:0.68em; letter-spacing:2px; text-transform:uppercase;
+      color:var(--cyan); background:rgba(0,240,255,0.07);
+      border:1px solid rgba(0,240,255,0.18); border-radius:4px;
+      padding:6px 16px; margin-bottom:28px;
+    }
+    .hero h1 {
+      font-size: clamp(2.8em, 9vw, 5.5em);
+      font-weight:800; line-height:0.95; letter-spacing:-2px; margin-bottom:22px;
+      background: linear-gradient(135deg, #fff 0%, var(--cyan) 35%, var(--pink) 65%, var(--yellow) 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .hero-desc { font-size:1em; color:var(--muted2); max-width:460px; margin:0 auto 32px; line-height:1.7; }
+    .hero-chips { display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; }
+    .chip {
+      font-family:'Space Mono',monospace; font-size:0.68em; color:var(--muted2);
+      background:var(--card2); border:1px solid var(--border2);
+      border-radius:100px; padding:6px 14px;
+    }
+
+    /* ── Section title ── */
+    .sec {
+      font-family:'Space Mono',monospace; font-size:0.65em; text-transform:uppercase;
+      letter-spacing:3px; color:var(--muted); margin-bottom:18px;
+      display:flex; align-items:center; gap:14px;
+    }
+    .sec::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    /* ── Stats grid ── */
+    .stats-grid {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(155px,1fr));
+      gap:10px; margin-bottom:56px; animation:fadeUp 0.6s ease 0.2s both;
+    }
+    .stat {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:14px; padding:18px 20px; position:relative; overflow:hidden;
+    }
+    .stat::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      background: var(--acc);
+    }
+    .stat-lbl { font-family:'Space Mono',monospace; font-size:0.6em; text-transform:uppercase; letter-spacing:2px; color:var(--muted2); margin-bottom:8px; }
+    .stat-val { font-family:'Space Mono',monospace; font-size:1.55em; font-weight:700; color:var(--acc); margin-bottom:10px; transition:color 0.3s; }
+    .stat-track { height:3px; background:rgba(255,255,255,0.06); border-radius:2px; overflow:hidden; margin-bottom:8px; }
+    .stat-fill { height:100%; border-radius:2px; background:var(--acc); transition:width 1.2s cubic-bezier(0.4,0,0.2,1), background 0.3s; }
+    .stat-note { font-family:'Space Mono',monospace; font-size:0.6em; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+    .s-cpu   { --acc:var(--cyan) }
+    .s-ram   { --acc:var(--purple) }
+    .s-disk  { --acc:var(--yellow) }
+    .s-up    { --acc:var(--green) }
+    .s-bat   { --acc:var(--green) }
+    .s-temp  { --acc:var(--cyan) }
+
+    /* ── Services grid ── */
+    .services-grid {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+      gap:14px; margin-bottom:56px;
+    }
+
+    .svc {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:18px; padding:26px; text-decoration:none; color:var(--text);
+      position:relative; overflow:hidden;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      animation: fadeUp 0.5s ease both;
+    }
+    .svc::before {
+      content:''; position:absolute; inset:0;
+      background: radial-gradient(circle at 20% 20%, var(--acc), transparent 65%);
+      opacity:0; transition:opacity 0.35s;
+    }
+    .svc:hover { transform:translateY(-7px); border-color:var(--acc); box-shadow:0 24px 60px rgba(0,0,0,0.5), 0 0 40px var(--glow); }
+    .svc:hover::before { opacity:0.07; }
+
+    .svc-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+    .svc-icon {
+      width:46px; height:46px; border-radius:13px;
+      background:var(--ibg); display:flex; align-items:center; justify-content:center; font-size:21px;
+    }
+    .badge {
+      display:flex; align-items:center; gap:5px;
+      font-family:'Space Mono',monospace; font-size:0.6em;
+      padding:4px 10px; border-radius:100px;
+    }
+    .badge-dot { width:5px; height:5px; border-radius:50%; background:currentColor; animation:pulse 2s infinite; }
+    .badge.on  { background:rgba(0,255,136,0.1);  color:var(--green);  border:1px solid rgba(0,255,136,0.2); }
+    .badge.off { background:rgba(255,68,68,0.1);   color:var(--red);    border:1px solid rgba(255,68,68,0.2); }
+    .badge.chk { background:rgba(255,224,0,0.1);   color:var(--yellow); border:1px solid rgba(255,224,0,0.2); }
+    .badge.fix { background:rgba(180,77,255,0.1);  color:var(--purple); border:1px solid rgba(180,77,255,0.2); }
+
+    .svc-name { font-size:1.1em; font-weight:700; margin-bottom:5px; }
+    .svc-desc { font-size:0.8em; color:var(--muted2); line-height:1.55; margin-bottom:18px; }
+    .svc-port {
+      font-family:'Space Mono',monospace; font-size:0.65em; color:var(--acc);
+      display:flex; align-items:center; gap:8px;
+    }
+    .svc-port::before { content:''; width:16px; height:1px; background:var(--acc); opacity:0.6; }
+
+    /* accent variants */
+    .a-cyan   { --acc:var(--cyan);   --glow:rgba(0,240,255,0.12);  --ibg:rgba(0,240,255,0.08) }
+    .a-pink   { --acc:var(--pink);   --glow:rgba(255,45,110,0.12); --ibg:rgba(255,45,110,0.08) }
+    .a-purple { --acc:var(--purple); --glow:rgba(180,77,255,0.12); --ibg:rgba(180,77,255,0.08) }
+    .a-green  { --acc:var(--green);  --glow:rgba(0,255,136,0.12);  --ibg:rgba(0,255,136,0.08) }
+    .a-orange { --acc:var(--orange); --glow:rgba(255,107,43,0.12); --ibg:rgba(255,107,43,0.08) }
+    .a-yellow { --acc:var(--yellow); --glow:rgba(255,224,0,0.12);  --ibg:rgba(255,224,0,0.08) }
+    .a-teal   { --acc:#00e5cc;       --glow:rgba(0,229,204,0.12);  --ibg:rgba(0,229,204,0.08) }
+
+    .svc:nth-child(1){animation-delay:0.15s}
+    .svc:nth-child(2){animation-delay:0.22s}
+    .svc:nth-child(3){animation-delay:0.29s}
+    .svc:nth-child(4){animation-delay:0.36s}
+    .svc:nth-child(5){animation-delay:0.43s}
+    .svc:nth-child(6){animation-delay:0.50s}
+    .svc:nth-child(7){animation-delay:0.57s}
+
+    /* ── Footer ── */
+    footer {
+      border-top:1px solid var(--border); padding:32px 0 24px;
+      text-align:center; animation:fadeUp 0.6s ease 0.7s both;
+    }
+    .foot-logo { font-family:'Space Mono',monospace; font-size:0.85em; color:var(--muted2); margin-bottom:8px; }
+    .foot-logo em { color:var(--cyan); font-style:normal; }
+    .foot-sub  { font-family:'Space Mono',monospace; font-size:0.62em; color:var(--muted); margin-bottom:10px; }
+    .foot-time { font-family:'Space Mono',monospace; font-size:0.68em; color:var(--muted2); }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width:5px }
+    ::-webkit-scrollbar-track { background:var(--bg) }
+    ::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px }
+
+    @media(max-width:600px){
+      header { flex-direction:column; gap:14px; text-align:center; }
+      .hero h1 { letter-spacing:-1px; }
+    }
+  </style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<div class="container">
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <div class="logo-mark">⚡</div>
+      <div>
+        <div class="logo-text"><em>sudo</em>.local</div>
+        <div class="logo-sub">Home Server</div>
+      </div>
+    </div>
+    <div class="sys-pill">
+      <div class="sys-dot"></div>
+      <span id="overall-status">Checking...</span>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge">// Personal Cloud Infrastructure</div>
+    <h1>sudo.local<br>Server</h1>
+    <p class="hero-desc">Your personal cloud — media, files, DNS, finance and more. Running 24/7 on a Samsung S10+.</p>
+    <div class="hero-chips">
+      <span class="chip">📱 Samsung S10+ · InfinityOS</span>
+      <span class="chip">🐧 Debian 11 Bullseye</span>
+      <span class="chip">⚙️ DroidSpaces · ARM64</span>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="sec">Live System Stats</div>
+  <div class="stats-grid">
+    <div class="stat s-cpu">
+      <div class="stat-lbl">CPU Usage</div>
+      <div class="stat-val" id="cpu-val">—</div>
+      <div class="stat-track"><div class="stat-fill" id="cpu-bar" style="width:0%"></div></div>
+      <div class="stat-note" id="cpu-sub">8 Cores · ARM64</div>
+    </div>
+    <div class="stat s-ram">
+      <div class="stat-lbl">Memory</div>
+      <div class="stat-val" id="ram-val">—</div>
+      <div class="stat-track"><div class="stat-fill" id="ram-bar" style="width:0%"></div></div>
+      <div class="stat-note" id="ram-sub">Loading...</div>
+    </div>
+    <div class="stat s-disk">
+      <div class="stat-lbl">Storage</div>
+      <div class="stat-val" id="disk-val">—</div>
+      <div class="stat-track"><div class="stat-fill" id="disk-bar" style="width:0%"></div></div>
+      <div class="stat-note" id="disk-sub">Loading...</div>
+    </div>
+    <div class="stat s-up">
+      <div class="stat-lbl">Uptime</div>
+      <div class="stat-val" id="uptime-val">—</div>
+      <div class="stat-track"><div class="stat-fill" style="width:100%"></div></div>
+      <div class="stat-note" id="load-sub">Load: —</div>
+    </div>
+    <div class="stat s-bat">
+      <div class="stat-lbl">Battery</div>
+      <div class="stat-val" id="bat-val">—</div>
+      <div class="stat-track"><div class="stat-fill" id="bat-bar" style="width:0%"></div></div>
+      <div class="stat-note" id="bat-sub">Status: —</div>
+    </div>
+    <div class="stat s-temp">
+      <div class="stat-lbl">CPU Temp</div>
+      <div class="stat-val" id="cpu-temp-val">—</div>
+      <div class="stat-track"><div class="stat-fill" id="cpu-temp-bar" style="width:0%"></div></div>
+      <div class="stat-note">Exynos BIG Cores</div>
+    </div>
+    <div class="stat s-temp">
+      <div class="stat-lbl">GPU Temp</div>
+      <div class="stat-val" id="gpu-temp-val">—</div>
+      <div class="stat-track"><div class="stat-fill" id="gpu-temp-bar" style="width:0%"></div></div>
+      <div class="stat-note">G3D Graphics</div>
+    </div>
+    <div class="stat s-temp">
+      <div class="stat-lbl">Chassis Temp</div>
+      <div class="stat-val" id="chas-temp-val">—</div>
+      <div class="stat-track"><div class="stat-fill" id="chas-temp-bar" style="width:0%"></div></div>
+      <div class="stat-note">System Surface</div>
+    </div>
+    <div class="stat s-temp">
+      <div class="stat-lbl">Battery Temp</div>
+      <div class="stat-val" id="bat-temp-val">—</div>
+      <div class="stat-track"><div class="stat-fill" id="bat-temp-bar" style="width:0%"></div></div>
+      <div class="stat-note">Power Supply</div>
+    </div>
+  </div>
+
+  <!-- Services -->
+  <div class="sec">Services</div>
+  <div class="services-grid">
+
+    <a href="#" class="svc a-cyan" id="card-homer">
+      <div class="svc-head">
+        <div class="svc-icon">🏠</div>
+        <div class="badge chk" id="status-homer"><div class="badge-dot"></div>Checking</div>
+      </div>
+      <div class="svc-name">Homer</div>
+      <div class="svc-desc">Unified dashboard for all your self-hosted services.</div>
+      <div class="svc-port">:8080 · Dashboard</div>
+    </a>
+
+    <a href="#" class="svc a-pink" id="card-adguard">
+      <div class="svc-head">
+        <div class="svc-icon">🛡️</div>
+        <div class="badge chk" id="status-adguard"><div class="badge-dot"></div>Checking</div>
+      </div>
+      <div class="svc-name">AdGuard Home</div>
+      <div class="svc-desc">Network-wide DNS ad blocking for every device on the network.</div>
+      <div class="svc-port">:8082 · DNS · AdBlock</div>
+    </a>
+
+    <a href="#" class="svc a-purple" id="card-jellyfin">
+      <div class="svc-head">
+        <div class="svc-icon">🎬</div>
+        <div class="badge chk" id="status-jellyfin"><div class="badge-dot"></div>Checking</div>
+      </div>
+      <div class="svc-name">Jellyfin</div>
+      <div class="svc-desc">Stream your personal media library — movies, music, photos.</div>
+      <div class="svc-port">:8096 · Media Server</div>
+    </a>
+
+    <a href="#" class="svc a-green" id="card-files">
+      <div class="svc-head">
+        <div class="svc-icon">📁</div>
+        <div class="badge chk" id="status-files"><div class="badge-dot"></div>Checking</div>
+      </div>
+      <div class="svc-name">File Browser</div>
+      <div class="svc-desc">Browse, upload and manage files from any device, anywhere.</div>
+      <div class="svc-port">:8081 · File Manager</div>
+    </a>
+
+    <a href="#" class="svc a-orange" id="card-nginx">
+      <div class="svc-head">
+        <div class="svc-icon">🌐</div>
+        <div class="badge chk" id="status-nginx"><div class="badge-dot"></div>Checking</div>
+      </div>
+      <div class="svc-name">Nginx</div>
+      <div class="svc-desc">Web server and reverse proxy powering this page and all routes.</div>
+      <div class="svc-port">:80 · Web Server</div>
+    </a>
+
+    <a href="#" class="svc a-teal" id="card-finance">
+      <div class="svc-head">
+        <div class="svc-icon">💰</div>
+        <div class="badge chk" id="status-finance"><div class="badge-dot"></div>Checking</div>
+      </div>
+      <div class="svc-name">sudo.finance</div>
+      <div class="svc-desc">Personal finance tracker — income, expenses, budgets and reports.</div>
+      <div class="svc-port">/finance · Finance App</div>
+    </a>
+
+    <div class="svc a-yellow" style="cursor:default;">
+      <div class="svc-head">
+        <div class="svc-icon">🔐</div>
+        <div class="badge fix"><div class="badge-dot"></div>Active</div>
+      </div>
+      <div class="svc-name">SSH Access</div>
+      <div class="svc-desc">Secure shell access from any terminal or SSH client.</div>
+      <div class="svc-port">:2222 · OpenSSH</div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="foot-logo"><em>sudo</em>.local · Home Server</div>
+    <div class="foot-sub" id="footer-info">Debian 11 · DroidSpaces · Samsung S10+</div>
+    <div class="foot-time" id="clock">--:--:--</div>
+  </footer>
+
+</div>
+
+<script>
+  const HOST = window.location.hostname;
+  const isServeo = HOST.includes('serveo');
+
+  const serviceLinks = {
+    homer:   isServeo ? `https://${HOST}/`          : `http://${HOST}:8080`,
+    adguard: isServeo ? `https://${HOST}/adguard/`  : `http://${HOST}:8082`,
+    jellyfin:isServeo ? `https://${HOST}/media/`    : `http://${HOST}:8096`,
+    files:   isServeo ? `https://${HOST}/files/`    : `http://${HOST}:8081`,
+    nginx:   isServeo ? `https://${HOST}/`          : `http://${HOST}:80`,
+    finance: `${isServeo ? 'https' : 'http'}://${HOST}/finance`,
+  };
+
+  const checkUrls = {
+    homer:   `http://192.168.100.149:8080`,
+    adguard: `http://192.168.100.149:8082`,
+    jellyfin:`http://192.168.100.149:8096`,
+    files:   `http://192.168.100.149:8081`,
+    nginx:   `http://192.168.100.149:80`,
+    finance: `http://192.168.100.149/finance`,
+  };
+
+  Object.entries(serviceLinks).forEach(([k,url]) => {
+    const c = document.getElementById(`card-${k}`);
+    if (c) c.href = url;
+  });
+
+  document.getElementById('footer-info').textContent = HOST + ' · Debian 11 · DroidSpaces · Samsung S10+';
+
+  // Clock
+  setInterval(() => {
+    document.getElementById('clock').textContent = new Date().toLocaleTimeString();
+  }, 1000);
+
+  // Stats
+  async function fetchStats() {
+    try {
+      const d = await fetch('/stats').then(r => r.json());
+
+      set('cpu-val', d.cpu + '%');
+      setBar('cpu-bar', d.cpu);
+      document.getElementById('cpu-sub').textContent = d.cpu_info || '8 Cores · ARM64';
+
+      const rp = Math.round(d.ram_used / d.ram_total * 100);
+      set('ram-val', rp + '%');
+      setBar('ram-bar', rp);
+      document.getElementById('ram-sub').textContent = d.ram_used + 'MB used of ' + d.ram_total + 'MB';
+
+      set('disk-val', d.disk_pct + '%');
+      setBar('disk-bar', d.disk_pct);
+      document.getElementById('disk-sub').textContent = d.disk_used + 'GB used of ' + d.disk_total + 'GB';
+
+      set('uptime-val', d.uptime);
+      document.getElementById('load-sub').textContent = 'Load: ' + d.load;
+
+      set('bat-val', (d.battery_pct ?? '--') + '%');
+      setBar('bat-bar', d.battery_pct || 0);
+      document.getElementById('bat-sub').textContent = 'Status: ' + (d.battery_status || 'Unknown');
+
+      setTemp('cpu-temp',  d.cpu_temp);
+      setTemp('gpu-temp',  d.gpu_temp);
+      setTemp('chas-temp', d.chas_temp);
+      setTemp('bat-temp',  d.bat_temp);
+
+    } catch(e) {
+      ['cpu-val','ram-val','disk-val','uptime-val','bat-val'].forEach(id => set(id, 'N/A'));
+    }
+  }
+
+  function set(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  }
+  function setBar(id, pct) {
+    const el = document.getElementById(id);
+    if (el) el.style.width = Math.min(100, pct) + '%';
+  }
+  function setTemp(id, t) {
+    const val = document.getElementById(`${id}-val`);
+    const bar = document.getElementById(`${id}-bar`);
+    if (!val || !bar || t === undefined) return;
+    const n = parseFloat(t);
+    val.textContent = n + '°C';
+    bar.style.width = Math.min(100, (n / 80) * 100) + '%';
+    const color = n > 45 ? 'var(--red)' : n >= 40 ? 'var(--orange)' : 'var(--cyan)';
+    bar.style.background = color;
+    val.style.color = color;
+  }
+
+  // Health check
+  async function checkSvc(key) {
+    const el = document.getElementById('status-' + key);
+    if (!el) return;
+    try {
+      await fetch(checkUrls[key], { mode:'no-cors', signal:AbortSignal.timeout(3000) });
+      el.className = 'badge on';
+      el.innerHTML = '<div class="badge-dot"></div>Online';
+    } catch(e) {
+      if (e.name === 'TimeoutError' || e.name === 'AbortError') {
+        el.className = 'badge off';
+        el.innerHTML = '<div class="badge-dot"></div>Offline';
+      } else {
+        el.className = 'badge on';
+        el.innerHTML = '<div class="badge-dot"></div>Online';
+      }
+    }
+  }
+
+  async function runAll() {
+    await Promise.all(Object.keys(checkUrls).map(checkSvc));
+    const anyOff = [...document.querySelectorAll('.badge')].some(b => b.classList.contains('off'));
+    document.getElementById('overall-status').textContent = anyOff ? 'Degraded — Check Services' : 'All Systems Operational';
+  }
+
+  fetchStats();
+  runAll();
+  setInterval(fetchStats, 10000);
+  setInterval(runAll, 30000);
+</script>
+</body>
+</html>
